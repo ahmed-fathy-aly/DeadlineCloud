@@ -9,25 +9,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SyncActivity" >
 
-  
+    <ListView
+        android:id="@+id/listViewMyGroups"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </ListView>
 
-        <ListView
-            android:id="@+id/listViewMyGroups"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-        </ListView>
+    <ListView
+        android:id="@+id/listViewAllGroups"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </ListView>
 
-
-
-        <ListView
-            android:id="@+id/listViewAllGroups"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-        </ListView>
-
-
-    </LinearLayout>
 
 </LinearLayout>

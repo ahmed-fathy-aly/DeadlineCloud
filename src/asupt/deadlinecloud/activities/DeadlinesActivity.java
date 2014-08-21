@@ -1,4 +1,4 @@
-package asuspt.deadlinecloud.activities;
+package asupt.deadlinecloud.activities;
 
 import java.util.ArrayList;
 

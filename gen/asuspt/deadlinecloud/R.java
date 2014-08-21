@@ -43,26 +43,27 @@ public final class R {
         public static final int transp_icon_selector=0x7f020013;
     }
     public static final class id {
-        public static final int action_settings=0x7f080012;
-        public static final int addDeadlineButton=0x7f080013;
+        public static final int action_settings=0x7f080013;
+        public static final int addDeadlineButton=0x7f080014;
         public static final int buttonAddDeadline=0x7f080000;
-        public static final int buttonDeadlineDelete=0x7f08000a;
+        public static final int buttonDeadlineDelete=0x7f08000b;
         public static final int datePickerDeadlineDate=0x7f080003;
-        public static final int deadlineBackground=0x7f08000b;
-        public static final int deadlinePriorityIndicator=0x7f08000c;
-        public static final int deadlineRemindButton=0x7f080011;
+        public static final int deadlineBackground=0x7f08000c;
+        public static final int deadlinePriorityIndicator=0x7f08000d;
+        public static final int deadlineRemindButton=0x7f080012;
         public static final int editTextDeadlineDescription=0x7f080002;
         public static final int editTextDeadlineTitle=0x7f080001;
         public static final int expandableList=0x7f080006;
         public static final int home_activity_button_deadlines=0x7f080007;
-        public static final int listView1=0x7f080008;
+        public static final int listViewAllGroups=0x7f080009;
+        public static final int listViewMyGroups=0x7f080008;
         public static final int spinnerGroup=0x7f080005;
         public static final int spinnerPriority=0x7f080004;
-        public static final int textViewDeadineDescription=0x7f080009;
-        public static final int textViewDeadlineDate=0x7f08000e;
-        public static final int textViewDeadlineDaysRem=0x7f080010;
-        public static final int textViewDeadlineGroup=0x7f08000f;
-        public static final int textViewDeadlineTitle=0x7f08000d;
+        public static final int textViewDeadineDescription=0x7f08000a;
+        public static final int textViewDeadlineDate=0x7f08000f;
+        public static final int textViewDeadlineDaysRem=0x7f080011;
+        public static final int textViewDeadlineGroup=0x7f080010;
+        public static final int textViewDeadlineTitle=0x7f08000e;
     }
     public static final class layout {
         public static final int activity_add_deadline=0x7f030000;

@@ -1,4 +1,4 @@
-package asuspt.deadlinecloud;
+package asupt.deadlinecloud.activities;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -7,6 +7,9 @@ import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.os.Build;
+import asuspt.deadlinecloud.R;
+import asuspt.deadlinecloud.R.layout;
+import asuspt.deadlinecloud.R.menu;
 
 public class SyncActivity extends Activity
 {
