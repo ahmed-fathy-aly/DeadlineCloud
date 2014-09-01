@@ -2,8 +2,11 @@ package asupt.deadlinecloud.activities;
 
 import java.util.ArrayList;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
@@ -16,6 +19,9 @@ import asupt.deadlinecloud.adapters.DeadlineListAdapter;
 import asupt.deadlinecloud.adapters.DeadlineListAdapter.DeadlineListListener;
 import asupt.deadlinecloud.data.DatabaseController;
 import asupt.deadlinecloud.data.Deadline;
+import asupt.deadlinecloud.data.Group;
+import asupt.deadlinecloud.data.Reminder;
+import asupt.deadlinecloud.web.WebMinion;
 import asuspt.deadlinecloud.R;
 import asuspt.deadlinecloud.R.layout;
 import asuspt.deadlinecloud.R.menu;
@@ -23,7 +29,7 @@ import asuspt.deadlinecloud.R.menu;
 public class DeadlinesActivity extends Activity implements DeadlineListListener
 {
 
-	private DatabaseController database;
+	private static DatabaseController database;
 	private static ArrayList<Deadline> deadlines;
 	private static DeadlineListAdapter listAdapter;
 	private ExpandableListView listView;
@@ -45,7 +51,7 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 	private void setDeadlinesList()
 	{
 		// get the deadlines
-		database = new DatabaseController();
+		database = new DatabaseController(this);
 		deadlines = database.getAllDeadlines();
 
 		// manage the expandable list
@@ -87,14 +93,20 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 			Intent intent = new Intent(this, AddDeadlineActivity.class);
 			startActivity(intent);
 			return true;
+		case R.id.refreshDeadlines:
+			refreshDeadline();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+
 
 	@Override
 	public void removeDeadline(int idx)
 	{
 		// remove the deadline
+		database.deleteDeadline(deadlines.get(idx));
 		this.deadlines.remove(idx);
 
 		// collapse that deadline
@@ -117,8 +129,12 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 
 	public static void addDeadline(Deadline deadline)
 	{
+		// add it to the list
 		deadlines.add(deadline);
 		listAdapter.notifyDataSetChanged();
+		
+		// add it to the database
+		database.addDedaline(deadline);
 	}
 
 	public int getDeadlinesCount()
@@ -126,4 +142,67 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 		return this.deadlines.size();
 	}
 
+	@Override
+	public void addReminder(Reminder reminder)
+	{
+		Log.e("Game", reminder.getCalendar().toString());
+		database.addReminder(reminder);
+	}
+
+	private void refreshDeadline()
+	{
+		// get the deadlines from the server and add them
+		new AsyncTask<Boolean, Boolean, Boolean>()
+		{
+			ProgressDialog progressDialog;
+			@Override
+			protected void onPreExecute()
+			{
+				progressDialog = ProgressDialog.show(DeadlinesActivity.this, "Downloading", "Downloading deadlines...");
+			}
+
+			@Override
+			protected Boolean doInBackground(Boolean... params)
+			{
+				// Add the local deadlines
+				ArrayList<Deadline> newDeadlines = new ArrayList<Deadline>();
+				for (Deadline deadline : database.getAllDeadlines())
+					if (deadline.getGroupName().equals(Deadline.localString))
+						newDeadlines.add(deadline);
+
+				// add all other deadlines
+				for (Group group : database.getAllGroups())
+				{
+					ArrayList<Deadline> groupDeadlines = WebMinion.getAllDeadlines(group.getId());
+					for (Deadline deadline : groupDeadlines)
+						newDeadlines.add(deadline);
+				}
+				
+				// remove all the deadlines in the database
+				for (Deadline deadline : database.getAllDeadlines())
+					database.deleteDeadline(deadline);
+				
+				// add the new deadlines
+				deadlines.clear();
+				for (Deadline deadline : newDeadlines)
+				{
+					database.addDedaline(deadline);
+					deadlines.add(deadline);
+				}
+				
+				return true;
+			}
+
+			@Override
+			protected void onPostExecute(Boolean result)
+			{
+				// dissmiss
+				progressDialog.dismiss();
+				listAdapter.notifyDataSetChanged();
+			}
+
+		
+			
+		}.execute(true);
+	}
 }

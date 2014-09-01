@@ -17,20 +17,18 @@ public class Deadline
 
 	public static final int highPriorityColor = 0;
 
-
-
 	public static String localString = "Local";
-	public static int   HIGH_COLOR = 0xaaff4444;
-	public static int   MID_COLOR = 0xaaffbb33;
-	public static int   LOW_COLOR = 0xaa99cc00;
-	
-	
+	public static int HIGH_COLOR = 0xaaff4444;
+	public static int MID_COLOR = 0xaaffbb33;
+	public static int LOW_COLOR = 0xaa99cc00;
+
 	/* member variables */
 	private String title;
 	private String description;
 	private Priorirty priority;
 	private Calendar calendar;
 	private String groupName;
+	private long databaseId;
 
 	/* Constructors */
 	public Deadline()
@@ -87,13 +85,20 @@ public class Deadline
 	{
 		return this.calendar;
 	}
-	
-public void setDate(int year, int month, int day)
+
+	public void setCalendar(Calendar calendar)
 	{
-		GregorianCalendar calendar = new GregorianCalendar(year, month-1, day, 0, 0, 0);
-		Log.e("Game", calendar.toString());
-		this.calendar  = calendar;
-		
+		this.calendar = calendar;
+	}
+
+	public long getDatabaseId()
+	{
+		return databaseId;
+	}
+
+	public void setDatabaseId(long databaseId)
+	{
+		this.databaseId = databaseId;
 	}
 
 	/* Methods */
@@ -112,8 +117,15 @@ public void setDate(int year, int month, int day)
 
 	public int getRemainingDays()
 	{
-		Date now = new Date();
+		Calendar nowC = new GregorianCalendar();
+		nowC.set(Calendar.YEAR, nowC.get(Calendar.YEAR) - 1900);
+
+		Date now = nowC.getTime();
 		Date then = calendar.getTime();
+
+		Log.e("Game", "now" + now.toString());
+		Log.e("Game", "then" + then.toString());
+
 		long diff = then.getTime() - now.getTime();
 		int daysRem = (int) (diff / (24 * 60 * 60 * 1000));
 		if (daysRem < 0)
@@ -121,14 +133,37 @@ public void setDate(int year, int month, int day)
 		return daysRem;
 	}
 
+	public int getWebPriority()
+	{
+		if (priority.equals(Priorirty.HIGH))
+			return 3;
+		else if (priority.equals(Priorirty.MEDIUM))
+			return 2;
+		else
+			return 1;
+	}
+
+	public void setWebPriority(int p)
+	{
+		if (p == 3)
+			this.priority = Priorirty.HIGH;
+		else if (p == 2)
+			this.priority = Priorirty.MEDIUM;
+		else
+			this.priority = Priorirty.LOW;
+	}
+
 	public static void main(String[] args)
 	{
+		Calendar calendar = new GregorianCalendar();
+		calendar.set(Calendar.YEAR, 2014 - 1900);
+		calendar.set(Calendar.MONTH, 9);
+		calendar.set(Calendar.DAY_OF_MONTH, 9);
+
 		Deadline deadline = new Deadline();
-		deadline.setTitle("Mesa7a");
-		deadline.setDescription("bla bla bla");
-		deadline.setGroupName(Deadline.localString);
-		deadline.setDate(2014, 8, 15);
-		System.out.println(deadline);
+		deadline.setCalendar(calendar);
+
+		System.out.println(deadline.getRemainingDays());
 
 	}
 

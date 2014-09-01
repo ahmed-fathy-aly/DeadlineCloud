@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewGroupName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Group Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#ff444444" />
+
+        <TextView
+            android:id="@+id/textViewNmberOfSubscribers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12 users"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#aa444444" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="right|center_horizontal" >
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/buttonGroupSync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_button_selector"
+                android:text="Sync"
+                android:textColor="#ffffffff" />
+
+            <ImageView
+                android:id="@+id/imageViewSynced"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_checkmark_holo_light" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

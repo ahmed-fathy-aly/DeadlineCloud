@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.view.animation.Animation;
+import asupt.deadlinecloud.data.Reminder;
 import asuspt.deadlinecloud.R;
 import asuspt.deadlinecloud.R.layout;
 import asuspt.deadlinecloud.R.menu;
@@ -17,6 +19,7 @@ public class HomeActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		
 	}
 
 	@Override
@@ -30,6 +33,18 @@ public class HomeActivity extends Activity
 	public void onButtonDeadlinesClicked(View v)
 	{
 		Intent intent = new Intent(this, DeadlinesActivity.class);
+		startActivity(intent);
+	}
+
+	public void onButtonSyncClicked(View v)
+	{
+		Intent intent = new Intent(this, SyncActivity.class);
+		startActivity(intent);
+	}
+
+	public void onButtonRemindersClickes(View v)
+	{
+		Intent intent = new Intent(this, RemindersActivity.class);
 		startActivity(intent);
 	}
 }

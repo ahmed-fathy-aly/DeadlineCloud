@@ -30,7 +30,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/home_icon_selector"
-            android:src="@drawable/icon_reminders" />
+            android:src="@drawable/icon_reminders"
+            android:onClick="onButtonRemindersClickes" />
     </LinearLayout>
 
     <LinearLayout
@@ -44,7 +45,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/home_icon_selector"
-            android:src="@drawable/icon_sync" />
+            android:src="@drawable/icon_sync" 
+            android:onClick="onButtonSyncClicked"/>
 
         <ImageButton
             android:layout_width="0dp"

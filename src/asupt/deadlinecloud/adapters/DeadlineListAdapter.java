@@ -11,6 +11,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import asupt.deadlinecloud.data.Deadline;
+import asupt.deadlinecloud.data.Reminder;
 import asupt.deadlinecloud.views.DeadlineView;
 import asupt.deadlinecloud.views.DeadlineView.DeadlineViewListener;
 import asuspt.deadlinecloud.R;
@@ -25,6 +26,8 @@ public class DeadlineListAdapter extends BaseExpandableListAdapter
 		Deadline getDeadline(int idx);
 
 		int getDeadlinesCount();
+
+		void addReminder(Reminder reminder);
 	}
 
 	/* member variables */
@@ -130,6 +133,13 @@ public class DeadlineListAdapter extends BaseExpandableListAdapter
 					listView.expandGroup(groupPosition);
 					selectedIndex = groupPosition;
 				}
+			}
+
+			@Override
+			public void addReminder(Reminder reminder)
+			{
+				listener.addReminder(reminder);
+				
 			}
 		};
 		DeadlineView deadlineView = new DeadlineView(context, this.listener

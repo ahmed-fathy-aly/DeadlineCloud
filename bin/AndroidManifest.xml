@@ -47,6 +47,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="asuspt.deadlinecloud.activities.HomeActivity" />
         </activity>
+        <activity
+            android:name="asupt.deadlinecloud.activities.RemindersActivity"
+            android:label="@string/title_activity_reminders"
+            android:parentActivityName="asupt.deadlinecloud.activities.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="asupt.deadlinecloud.activities.HomeActivity" />
+        </activity>
+        <activity
+            android:name="asupt.deadlinecloud.activities.AddGroupActivity"
+            android:label="@string/title_activity_add_group"
+            android:parentActivityName="asupt.deadlinecloud.activities.SyncActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="asupt.deadlinecloud.activities.SyncActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -7,5 +7,7 @@
     <string name="title_activity_deadlines">Deadlines</string>
     <string name="title_activity_add_deadline">AddDeadlineActivity</string>
     <string name="title_activity_sync">Sync</string>
+    <string name="title_activity_reminders">Reminders</string>
+    <string name="title_activity_add_group">New Group</string>
 
 </resources>

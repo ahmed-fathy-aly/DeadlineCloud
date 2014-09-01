@@ -5,6 +5,7 @@ public class Group
 	private String name;
 	private String id;
 	private int numberOfSubscribers;
+	private long databaseId;
 	
 	public Group(String name, String id, int numberOfSubscribers)
 	{
@@ -49,6 +50,17 @@ public class Group
 	{
 		this.numberOfSubscribers = numberOfSubscribers;
 	}
+
+	public long getDatabaseId()
+	{
+		return databaseId;
+	}
+
+	public void setDatabaseId(long databaseId)
+	{
+		this.databaseId = databaseId;
+	}
+	
 	
 	
 	
