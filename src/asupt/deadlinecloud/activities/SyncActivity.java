@@ -129,12 +129,6 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 			{
 				allgroups = WebMinion.getAllGroups();
 
-				// set the adapter
-				allGroupsListAdapter = new AllGroupsListAdapter(SyncActivity.this,
-						SyncActivity.this);
-				allGroupsListView = (ListView) findViewById(R.id.listViewAllGroups);
-				allGroupsListView.setAdapter(allGroupsListAdapter);
-
 				return true;
 			}
 
@@ -142,6 +136,12 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 			protected void onPostExecute(Boolean result)
 			{
 				progressDialog.dismiss();
+				
+				// set the adapter
+				allGroupsListAdapter = new AllGroupsListAdapter(SyncActivity.this,
+						SyncActivity.this);
+				allGroupsListView = (ListView) findViewById(R.id.listViewAllGroups);
+				allGroupsListView.setAdapter(allGroupsListAdapter);
 			}
 		}.execute(true);
 

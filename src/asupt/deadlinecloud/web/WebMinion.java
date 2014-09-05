@@ -36,7 +36,7 @@ public class WebMinion
 	 */
 	public static boolean addGroup(String groupName)
 	{
-		boolean debug = true;
+		boolean debug = false;
 		if (debug)
 			return true;
 		
@@ -68,7 +68,7 @@ public class WebMinion
 	public static ArrayList<Group> getAllGroups()
 	{
 		// debug
-		boolean web = false;
+		boolean web = true;
 		if (!web)
 		{
 			ArrayList<Group> groups = new ArrayList<Group>();
@@ -144,7 +144,7 @@ public class WebMinion
 	 */
 	public static void postDeadline(String groupId, String userId, Deadline deadline)
 	{
-		boolean debug = true;
+		boolean debug = false;
 		if (debug)
 			return;
 		
@@ -179,7 +179,7 @@ public class WebMinion
 	public static ArrayList<Deadline> getAllDeadlines(String groupId)
 	{
 
-		boolean debug = true;
+		boolean debug = false;
 		if (debug)
 		{
 			ArrayList<Deadline> deadlines = new ArrayList<Deadline>();

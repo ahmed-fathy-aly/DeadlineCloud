@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -140,6 +141,7 @@ public class AddDeadlineActivity extends Activity
 			protected Boolean doInBackground(Boolean... params)
 			{
 				// ask the minion to add it
+				Log.e("Game", group.getId());
 				WebMinion.postDeadline(group.getId(), MyUtils.getUserId(AddDeadlineActivity.this),
 						deadline);
 				return true;

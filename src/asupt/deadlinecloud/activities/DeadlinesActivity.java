@@ -100,8 +100,6 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 		return super.onOptionsItemSelected(item);
 	}
 
-
-
 	@Override
 	public void removeDeadline(int idx)
 	{
