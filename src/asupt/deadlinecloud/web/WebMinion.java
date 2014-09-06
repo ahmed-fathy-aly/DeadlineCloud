@@ -36,10 +36,6 @@ public class WebMinion
 	 */
 	public static boolean addGroup(String groupName)
 	{
-		boolean debug = false;
-		if (debug)
-			return true;
-		
 		HttpPost httppost = new HttpPost(initUrl + "groups.json");
 
 		try
@@ -67,21 +63,7 @@ public class WebMinion
 	 */
 	public static ArrayList<Group> getAllGroups()
 	{
-		// debug
-		boolean web = true;
-		if (!web)
-		{
-			ArrayList<Group> groups = new ArrayList<Group>();
 
-			groups.add(new Group("CSE 2016", "123", 400));
-			groups.add(new Group("Masa7in 2016", "56734", 111));
-			groups.add(new Group("CSE 2017", "6734", 200));
-			groups.add(new Group("Mech 2012", "734", 300));
-			groups.add(new Group("CIVIL 2012", "34", 20));
-			groups.add(new Group("bananas", "4", 5));
-
-			return groups;
-		}
 
 		HttpGet httpget = new HttpGet(initUrl + "groups.json");
 		ArrayList<Group> groups = new ArrayList<Group>();
@@ -94,18 +76,25 @@ public class WebMinion
 			{
 				Log.i("RESPONSE", response_str);
 				JSONArray res = new JSONArray(response_str);
+				Log.i("RESPONSE", "1");
 				for (int i = 0; i < res.length(); i++)
 				{
+					Log.i("RESPONSE", "2");
 					JSONObject group = res.getJSONObject(i);
-					groups.add(new Group(group.getString("name"), String
-							.valueOf(group.getInt("id")), group.getInt("subscribers_count")));
+					Log.i("RESPONSE", "3");
+					Log.i("RESPONSE", group.getString("name"));
+					Log.i("RESPONSE", String.valueOf(group.getInt("id")));
+					Log.i("RESPONSE", String.valueOf(group.getInt("subscribers_count")));
+					groups.add(new Group(group.getString("name"), String.valueOf(group.getInt("id")), group.getInt("subscribers_count")));
+					Log.i("RESPONSE", "4");
 				}
+				Log.i("RESPONSE", "5");
+				return groups;
 			}
 		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
-
 		return groups;
 
 	}
@@ -116,9 +105,7 @@ public class WebMinion
 	 */
 	public static void subscribe(String groupId, String userId)
 	{
-		boolean debug = true;
-		if (debug)
-			return;
+	
 		
 		HttpPost httppost = new HttpPost(initUrl + "groups/" + groupId + "/users.json");
 
@@ -130,8 +117,10 @@ public class WebMinion
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			// Execute HTTP Post Request
-			client.execute(httppost);
-
+			HttpResponse response = client.execute(httppost);
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			Log.e("RESPONSE",response_str);
 		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
@@ -144,9 +133,7 @@ public class WebMinion
 	 */
 	public static void postDeadline(String groupId, String userId, Deadline deadline)
 	{
-		boolean debug = false;
-		if (debug)
-			return;
+
 		
 		HttpPost httppost = new HttpPost(initUrl + "groups/" + groupId + "/deadlines.json");
 
@@ -156,16 +143,20 @@ public class WebMinion
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("phone_id", userId));
 			nameValuePairs.add(new BasicNameValuePair("deadline[name]", deadline.getTitle()));
-			nameValuePairs.add(new BasicNameValuePair("deadline[description]", deadline
-					.getDescription()));
-			nameValuePairs.add(new BasicNameValuePair("deadline[priority]", String.valueOf(deadline
-					.getWebPriority())));
-			nameValuePairs.add(new BasicNameValuePair("deadline[time]", String.valueOf(deadline
-					.getCalendar())));
+			nameValuePairs.add(new BasicNameValuePair("deadline[description]", deadline.getDescription()));
+			nameValuePairs.add(new BasicNameValuePair("deadline[priority]", String.valueOf(deadline.getWebPriority())));
+			Calendar t = deadline.getCalendar();
+			t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
+			Log.i("asasdfad",String.valueOf(t.getTimeInMillis()));
+			nameValuePairs.add(new BasicNameValuePair("utc_time", String.valueOf(t.getTimeInMillis())));
+			Log.i("RESPONSE",String.valueOf(deadline.getCalendar()));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			// Execute HTTP Post Request
-			client.execute(httppost);
+			HttpResponse response = client.execute(httppost);
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			Log.i("RESPONSE",response_str);
 
 		} catch (Exception ex)
 		{
@@ -179,18 +170,6 @@ public class WebMinion
 	public static ArrayList<Deadline> getAllDeadlines(String groupId)
 	{
 
-		boolean debug = false;
-		if (debug)
-		{
-			ArrayList<Deadline> deadlines = new ArrayList<Deadline>();
-			Deadline deadline = new Deadline();
-			deadline.setGroupName(groupId);
-			Calendar calendar = new GregorianCalendar();
-			calendar.set(Calendar.YEAR, 2014 - 1900);
-			deadline.setCalendar(calendar);
-			deadlines.add(deadline);
-			return deadlines;
-		}
 		
 		HttpGet httpget = new HttpGet(initUrl + "groups/" + groupId + "/deadlines.json");
 		ArrayList<Deadline> deadlines = new ArrayList<Deadline>();
@@ -209,6 +188,7 @@ public class WebMinion
 					Deadline d = new Deadline();
 					Calendar t = Calendar.getInstance();
 					t.setTimeInMillis(deadline.getLong("utc_time"));
+					t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
 					d.setCalendar(t);
 					d.setDescription(deadline.getString("description"));
 					d.setWebPriority(deadline.getInt("priority"));
