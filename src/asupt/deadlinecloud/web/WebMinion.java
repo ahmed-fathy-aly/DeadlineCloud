@@ -56,10 +56,11 @@ public class WebMinion
 	 * @param tag 
 	 * @param department 
 	 * @param graduationYear 
+	 * @param desciption 
 	 * @add a new group. Note that when a user adds a group, he doesn't get
 	 *      subscribed to it.
 	 */
-	public static boolean addGroup(String groupName, String gmailId, String graduationYear, String department, String tag)
+	public static boolean addGroup(String groupName, String gmailId, String graduationYear, String department, String tag, String desciption)
 	{
 		//TODO use graduationyear, department, tag and update them to server if not there
 		HttpPost httppost = new HttpPost(initUrl + "groups.json");

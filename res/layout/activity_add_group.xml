@@ -78,6 +78,15 @@
                 android:layout_gravity="center_horizontal"
                 android:ems="12"
                 android:hint="Tag" />
+
+            <EditText
+                android:id="@+id/editTextGroupDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="12"
+                android:hint = "Desciption"
+                android:inputType="textMultiLine" />
         </LinearLayout>
     </ScrollView>
 

@@ -96,6 +96,7 @@ public class AddGroupActivity extends Activity
 			{
 				// Ask the web minion to add this group
 				EditText groupNamEditText = (EditText) findViewById(R.id.editTextGroupTitle);
+				EditText descriptionEditText = (EditText) findViewById(R.id.editTextGroupDescription);
 				AutoCompleteTextView graduationYearEditText = (AutoCompleteTextView) findViewById(R.id.editTextGraduationYear);
 				AutoCompleteTextView departmentEditText = (AutoCompleteTextView) findViewById(R.id.editTextDepartment);
 				AutoCompleteTextView tagEditText = (AutoCompleteTextView) findViewById(R.id.editTextTag);
@@ -105,8 +106,9 @@ public class AddGroupActivity extends Activity
 				String graduationYear = graduationYearEditText.getText().toString();
 				String department = departmentEditText.getText().toString();
 				String tag = tagEditText.getText().toString();
+				String desciption = descriptionEditText.getText().toString();
 				
-				WebMinion.addGroup(groupName, gmailId, graduationYear, department, tag);
+				WebMinion.addGroup(groupName, gmailId, graduationYear, department, tag, desciption);
 				message = "added " + groupName + " by " + gmailId;
 				return true;
 			}

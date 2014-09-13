@@ -7,6 +7,7 @@ public class Group
 	private String graduationYear;
 	private String department;
 	private String tag;
+	private String descirption;
 	private int numberOfSubscribers;
 	private long databaseId;
 
@@ -92,6 +93,16 @@ public class Group
 	public void setTag(String tag)
 	{
 		this.tag = tag;
+	}
+
+	public String getDescirption()
+	{
+		return descirption;
+	}
+
+	public void setDescirption(String descirption)
+	{
+		this.descirption = descirption;
 	}
 
 }
