@@ -21,6 +21,7 @@ import asupt.deadlinecloud.data.DatabaseController;
 import asupt.deadlinecloud.data.Deadline;
 import asupt.deadlinecloud.data.Group;
 import asupt.deadlinecloud.data.Reminder;
+import asupt.deadlinecloud.utils.MyUtils;
 import asupt.deadlinecloud.web.WebMinion;
 import asuspt.deadlinecloud.R;
 import asuspt.deadlinecloud.R.layout;
@@ -48,6 +49,18 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (requestCode == MyUtils.ADD_DEADLINES_REQUEST_CODE)
+		{
+			if (resultCode == RESULT_OK)
+			{
+				refreshDeadline();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 	private void setDeadlinesList()
 	{
 		// get the deadlines
@@ -91,7 +104,7 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 			return true;
 		case R.id.addDeadlineButton:
 			Intent intent = new Intent(this, AddDeadlineActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, MyUtils.ADD_DEADLINES_REQUEST_CODE);
 			return true;
 		case R.id.refreshDeadlines:
 			refreshDeadline();

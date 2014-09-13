@@ -4,9 +4,12 @@ public class Group
 {
 	private String name;
 	private String id;
+	private String graduationYear;
+	private String department;
+	private String tag;
 	private int numberOfSubscribers;
 	private long databaseId;
-	
+
 	public Group(String name, String id, int numberOfSubscribers)
 	{
 		this.name = name;
@@ -60,13 +63,35 @@ public class Group
 	{
 		this.databaseId = databaseId;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	public String getGraduationYear()
+	{
+		return graduationYear;
+	}
+
+	public void setGraduationYear(String graduationYear)
+	{
+		this.graduationYear = graduationYear;
+	}
+
+	public String getDepartment()
+	{
+		return department;
+	}
+
+	public void setDepartment(String department)
+	{
+		this.department = department;
+	}
+
+	public String getTag()
+	{
+		return tag;
+	}
+
+	public void setTag(String tag)
+	{
+		this.tag = tag;
+	}
+
 }

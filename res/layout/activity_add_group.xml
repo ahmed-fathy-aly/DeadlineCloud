@@ -17,8 +17,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="3dp"
         android:background="@drawable/round_button_selector"
-        android:text="Add Group" 
-        android:onClick="onButtonAddGroupClicked"/>
+        android:onClick="onButtonAddGroupClicked"
+        android:text="Add Group" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -54,6 +54,30 @@
 
                 <requestFocus />
             </EditText>
+
+            <AutoCompleteTextView
+                android:id="@+id/editTextGraduationYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="12"
+                android:hint="Graduation year" />
+
+            <AutoCompleteTextView
+                android:id="@+id/editTextDepartment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="12"
+                android:hint="Department" />
+
+            <AutoCompleteTextView
+                android:id="@+id/editTextTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="12"
+                android:hint="Tag" />
         </LinearLayout>
     </ScrollView>
 

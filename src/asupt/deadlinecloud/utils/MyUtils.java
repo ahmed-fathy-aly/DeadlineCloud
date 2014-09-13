@@ -12,6 +12,9 @@ public class MyUtils
 
 	/* static stuff */
 	public static final String PREFS_NAME = "asupt.deadlinecloud.prefs";
+	public static final int ADD_DEADLINES_REQUEST_CODE = 111;
+	public static final int ADD_GROUP_REQUEST_CODE = 112;
+	public static final String TAG_ANY = "";
 	
 	
 	public static void addGroupToPreferences(String groupName, String id, Context context)

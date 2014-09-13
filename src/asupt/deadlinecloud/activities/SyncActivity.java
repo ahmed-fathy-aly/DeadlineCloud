@@ -13,6 +13,7 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 import asupt.deadlinecloud.adapters.AllGroupsListAdapter;
 import asupt.deadlinecloud.adapters.AllGroupsListAdapter.AllGroupsListListener;
 import asupt.deadlinecloud.adapters.MyGroupListAdapter;
@@ -76,10 +77,23 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 			return true;
 		case R.id.addNewGroupButton:
 			Intent intent = new Intent(this, AddGroupActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, MyUtils.ADD_GROUP_REQUEST_CODE);
 		}
-		
+
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (requestCode == MyUtils.ADD_GROUP_REQUEST_CODE)
+		{
+			if (resultCode == RESULT_OK)
+			{
+				setAllGroupsList();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	/* my groups stuff */
@@ -136,7 +150,7 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 			protected void onPostExecute(Boolean result)
 			{
 				progressDialog.dismiss();
-				
+
 				// set the adapter
 				allGroupsListAdapter = new AllGroupsListAdapter(SyncActivity.this,
 						SyncActivity.this);
@@ -181,7 +195,8 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 
 				// ask the web minion to subscribe
 				Group group = allgroups.get(index);
-				WebMinion.subscribe(group.getId(), MyUtils.getUserId(SyncActivity.this));
+				String gmailId = WebMinion.getGmailId(SyncActivity.this);
+				WebMinion.subscribe(group.getId(), gmailId);
 
 				// add that group to my groups
 				myGroups.add(group);

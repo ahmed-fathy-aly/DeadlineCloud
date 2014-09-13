@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -129,6 +130,7 @@ public class AddDeadlineActivity extends Activity
 		new AsyncTask<Boolean, Boolean, Boolean>()
 		{
 			ProgressDialog progressDialog;
+			String message = "";
 
 			@Override
 			protected void onPreExecute()
@@ -141,9 +143,9 @@ public class AddDeadlineActivity extends Activity
 			protected Boolean doInBackground(Boolean... params)
 			{
 				// ask the minion to add it
-				Log.e("Game", group.getId());
-				WebMinion.postDeadline(group.getId(), MyUtils.getUserId(AddDeadlineActivity.this),
-						deadline);
+				String gmailId = WebMinion.getGmailId(AddDeadlineActivity.this);
+				message = "Deadline added to" + group.getName() + "\nby " + gmailId;
+				WebMinion.postDeadline(group.getId(), gmailId, deadline);
 				return true;
 			}
 
@@ -153,8 +155,12 @@ public class AddDeadlineActivity extends Activity
 				// dissmiss
 				Toast.makeText(AddDeadlineActivity.this, "Added deadlines", Toast.LENGTH_SHORT)
 						.show();
+				Toast.makeText(AddDeadlineActivity.this, message, Toast.LENGTH_SHORT).show();
 				progressDialog.dismiss();
+				Intent returnIntent = new Intent();
+				setResult(RESULT_OK, returnIntent);
 				finish();
+				
 			}
 
 		}.execute(true);
