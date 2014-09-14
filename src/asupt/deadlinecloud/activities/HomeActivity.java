@@ -17,6 +17,7 @@ public class HomeActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
@@ -44,7 +45,7 @@ public class HomeActivity extends Activity
 
 	public void onButtonRemindersClickes(View v)
 	{
-		Intent intent = new Intent(this, RemindersActivity.class);
+		Intent intent = new Intent(this, MyGroupsActivity.class);
 		startActivity(intent);
 	}
 }

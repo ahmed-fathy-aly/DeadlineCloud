@@ -36,8 +36,7 @@
         <activity
             android:name="asupt.deadlinecloud.activities.AddDeadlineActivity"
             android:label="Add Deadline"
-            android:parentActivityName="asupt.deadlinecloud.activities.HomeActivity"
-            android:theme="@style/Theme.UserDialog" >
+            android:parentActivityName="asupt.deadlinecloud.activities.DeadlinesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="asuspt.deadlinecloud.activities.HomeActivity" />
@@ -65,6 +64,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="asupt.deadlinecloud.activities.SyncActivity" />
+        </activity>
+        <activity
+            android:name="asupt.deadlinecloud.activities.MyGroupsActivity"
+            android:label="My Groups"
+            android:parentActivityName="asupt.deadlinecloud.activities.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="asupt.deadlinecloud.activities.HomeActivity" />
         </activity>
     </application>
 

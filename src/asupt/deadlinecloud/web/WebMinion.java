@@ -53,16 +53,16 @@ public class WebMinion
 	}
 
 	/**
-	 * @param tag 
-	 * @param department 
-	 * @param graduationYear 
-	 * @param desciption 
+	 * @param tag
+	 * @param department
+	 * @param graduationYear
+	 * @param desciption
 	 * @add a new group. Note that when a user adds a group, he doesn't get
 	 *      subscribed to it.
 	 */
-	public static boolean addGroup(String groupName, String gmailId, String graduationYear, String department, String tag, String desciption)
+	public static boolean addGroup(String groupName, String gmailId, String graduationYear,
+			String department, String tag, String description)
 	{
-		//TODO use graduationyear, department, tag and update them to server if not there
 		HttpPost httppost = new HttpPost(initUrl + "groups.json");
 
 		try
@@ -71,6 +71,11 @@ public class WebMinion
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("group[name]", groupName));
 			nameValuePairs.add(new BasicNameValuePair("group[owner]", gmailId));
+			nameValuePairs.add(new BasicNameValuePair("group[description]", description));
+			nameValuePairs.add(new BasicNameValuePair("graduation_year", graduationYear));
+			nameValuePairs.add(new BasicNameValuePair("department", department));
+			nameValuePairs.add(new BasicNameValuePair("tag", tag));
+
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			// Execute HTTP Post Request
@@ -86,12 +91,16 @@ public class WebMinion
 	}
 
 	/**
+	 * @param tag 
+	 * @param department 
+	 * @param graduationYear 
 	 * @return a list of all groups including each groups's name, id, number of
 	 *         subscribers
 	 */
-	public static ArrayList<Group> getAllGroups()
+	public static ArrayList<Group> getAllGroups(String graduationYear, String department, String tag)
 	{
-
+		// modify here.....if graduationyear or department or tag == Myutils.TAG_ANY then return all groups with those tags
+		// Each group returned mush match ALL those tags
 		HttpGet httpget = new HttpGet(initUrl + "groups.json");
 		ArrayList<Group> groups = new ArrayList<Group>();
 		try
@@ -112,8 +121,13 @@ public class WebMinion
 					Log.i("RESPONSE", group.getString("name"));
 					Log.i("RESPONSE", String.valueOf(group.getInt("id")));
 					Log.i("RESPONSE", String.valueOf(group.getInt("subscribers_count")));
-					groups.add(new Group(group.getString("name"), String
-							.valueOf(group.getInt("id")), group.getInt("subscribers_count")));
+					Group g = new Group(group.getString("name"),
+							String.valueOf(group.getInt("id")), group.getInt("subscribers_count"));
+					g.setGraduationYear(String.valueOf(group.getString("graduation_year_name")));
+					g.setDescirption(group.getString("description"));
+					g.setDepartment(String.valueOf("department_name"));
+					g.setTag(String.valueOf("tag_name"));
+					groups.add(g);
 					Log.i("RESPONSE", "4");
 				}
 				Log.i("RESPONSE", "5");
@@ -238,10 +252,32 @@ public class WebMinion
 	 */
 	public static ArrayList<String> getGraduationYears()
 	{
+
+		HttpGet httpget = new HttpGet(initUrl + "graduation_years.json");
 		ArrayList<String> result = new ArrayList<String>();
-		result.add("2016");
-		result.add("2015");
-		result.add("2013");
+		try
+		{
+			HttpResponse response = client.execute(httpget);
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			if (resEntity != null)
+			{
+				Log.i("RESPONSE", response_str);
+				JSONArray res = new JSONArray(response_str);
+				Log.i("RESPONSE", "1");
+				for (int i = 0; i < res.length(); i++)
+				{
+					Log.i("RESPONSE", "2");
+					JSONObject grad_year = res.getJSONObject(i);
+					result.add(grad_year.getString("name"));
+					Log.i("RESPONSE", "4");
+				}
+				Log.i("RESPONSE", "5");
+			}
+		} catch (Exception ex)
+		{
+			Log.e("Debug", "error: " + ex.getMessage(), ex);
+		}
 		return result;
 	}
 
@@ -250,10 +286,31 @@ public class WebMinion
 	 */
 	public static ArrayList<String> getDeaprtments()
 	{
+		HttpGet httpget = new HttpGet(initUrl + "departments.json");
 		ArrayList<String> result = new ArrayList<String>();
-		result.add("E3dady");
-		result.add("Mechanical");
-		result.add("Electrical");
+		try
+		{
+			HttpResponse response = client.execute(httpget);
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			if (resEntity != null)
+			{
+				Log.i("RESPONSE", response_str);
+				JSONArray res = new JSONArray(response_str);
+				Log.i("RESPONSE", "1");
+				for (int i = 0; i < res.length(); i++)
+				{
+					Log.i("RESPONSE", "2");
+					JSONObject department = res.getJSONObject(i);
+					result.add(department.getString("name"));
+					Log.i("RESPONSE", "4");
+				}
+				Log.i("RESPONSE", "5");
+			}
+		} catch (Exception ex)
+		{
+			Log.e("Debug", "error: " + ex.getMessage(), ex);
+		}
 		return result;
 	}
 
@@ -262,10 +319,31 @@ public class WebMinion
 	 */
 	public static ArrayList<String> getTags()
 	{
+		HttpGet httpget = new HttpGet(initUrl + "tags.json");
 		ArrayList<String> result = new ArrayList<String>();
-		result.add("Study");
-		result.add("Exams");
-		result.add("games");
+		try
+		{
+			HttpResponse response = client.execute(httpget);
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			if (resEntity != null)
+			{
+				Log.i("RESPONSE", response_str);
+				JSONArray res = new JSONArray(response_str);
+				Log.i("RESPONSE", "1");
+				for (int i = 0; i < res.length(); i++)
+				{
+					Log.i("RESPONSE", "2");
+					JSONObject tag = res.getJSONObject(i);
+					result.add(tag.getString("name"));
+					Log.i("RESPONSE", "4");
+				}
+				Log.i("RESPONSE", "5");
+			}
+		} catch (Exception ex)
+		{
+			Log.e("Debug", "error: " + ex.getMessage(), ex);
+		}
 		return result;
 	}
 

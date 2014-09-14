@@ -9,5 +9,6 @@
     <string name="title_activity_sync">Sync</string>
     <string name="title_activity_reminders">Reminders</string>
     <string name="title_activity_add_group">New Group</string>
+    <string name="title_activity_my_groups">MyGroupsActivity</string>
 
 </resources>

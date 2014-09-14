@@ -37,7 +37,8 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{
+	{		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deadlines);
 
@@ -60,6 +61,13 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		NavUtils.navigateUpFromSameTask(this);
+		super.onBackPressed();
 	}
 	private void setDeadlinesList()
 	{

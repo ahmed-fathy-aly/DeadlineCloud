@@ -10,8 +10,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.Toast;
 import asupt.deadlinecloud.adapters.AllGroupsListAdapter;
@@ -24,15 +28,13 @@ import asupt.deadlinecloud.utils.MyUtils;
 import asupt.deadlinecloud.web.WebMinion;
 import asuspt.deadlinecloud.R;
 
-public class SyncActivity extends Activity implements MyGroupListListener, AllGroupsListListener
+public class SyncActivity extends Activity implements AllGroupsListListener
 {
 	/* stuff about the other groups */
-	private ArrayList<Group> myGroups;
-	private MyGroupListAdapter myGroupsListAdapter;
-	private ListView myGroupsListView;
-
-	/* stuff about synced groups */
 	private DatabaseController database;
+	private ArrayList<Group> myGroups;
+
+	/* stuff about all groups groups */
 	private ArrayList<Group> allgroups;
 	private AllGroupsListAdapter allGroupsListAdapter;
 	private ListView allGroupsListView;
@@ -40,6 +42,8 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sync);
 		setupActionBar();
@@ -47,6 +51,9 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 		// set lists stuff
 		setMyGroupsList();
 		setAllGroupsList();
+
+		// set search stuff
+		setSearchableTags();
 
 	}
 
@@ -84,6 +91,13 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 	}
 
 	@Override
+	public void onBackPressed()
+	{
+		NavUtils.navigateUpFromSameTask(this);
+		super.onBackPressed();
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		if (requestCode == MyUtils.ADD_GROUP_REQUEST_CODE)
@@ -96,69 +110,97 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	/* the search edit texts */
+	private void setSearchableTags()
+	{
+
+		new AsyncTask<Boolean, Boolean, Boolean>()
+		{
+			ProgressDialog progressDialog;
+			ArrayList<String> graduationYearHints;
+			ArrayList<String> departmentHints;
+			ArrayList<String> tagsHints;
+
+			protected void onPreExecute()
+			{
+				progressDialog = ProgressDialog.show(SyncActivity.this, "Loading", "Loading...");
+			}
+
+			protected Boolean doInBackground(Boolean... params)
+			{
+				// load graduation year hints
+				graduationYearHints = new ArrayList<String>();
+				ArrayList<String> serverGraduationYear = WebMinion.getGraduationYears();
+				for (String tag : serverGraduationYear)
+					graduationYearHints.add(tag);
+
+				// load departmentHint
+				departmentHints = new ArrayList<String>();
+				ArrayList<String> serverdepartments = WebMinion.getDeaprtments();
+				for (String tag : serverdepartments)
+					departmentHints.add(tag);
+
+				// load tags
+				tagsHints = new ArrayList<String>();
+				ArrayList<String> serverTags = WebMinion.getTags();
+				for (String tag : serverTags)
+					tagsHints.add(tag);
+
+				return true;
+			}
+
+			protected void onPostExecute(Boolean result)
+			{
+				// set graduation year edit text
+				ArrayAdapter<String> graduationYearAdapter = new ArrayAdapter<String>(
+						SyncActivity.this, android.R.layout.simple_dropdown_item_1line,
+						graduationYearHints);
+				AutoCompleteTextView graduationYear = (AutoCompleteTextView) SyncActivity.this
+						.findViewById(R.id.autoCompleteTextViewGraduationYeaSearchr);
+				graduationYear.setAdapter(graduationYearAdapter);
+
+				// set departments
+				ArrayAdapter<String> departmentAdapter = new ArrayAdapter<String>(
+						SyncActivity.this, android.R.layout.simple_dropdown_item_1line,
+						departmentHints);
+				AutoCompleteTextView department = (AutoCompleteTextView) SyncActivity.this
+						.findViewById(R.id.autoCompleteTextViewDepartmentSearch);
+				department.setAdapter(departmentAdapter);
+
+				// set tags
+				ArrayAdapter<String> tagsAdapter = new ArrayAdapter<String>(SyncActivity.this,
+						android.R.layout.simple_dropdown_item_1line, tagsHints);
+				AutoCompleteTextView tags = (AutoCompleteTextView) SyncActivity.this
+						.findViewById(R.id.autoCompleteTextViewTagSearch);
+				tags.setAdapter(tagsAdapter);
+
+				progressDialog.dismiss();
+
+			}
+
+		}.execute();
+
+	}
+
 	/* my groups stuff */
 	private void setMyGroupsList()
 	{
 		// get the groups
 		database = new DatabaseController(this);
 		myGroups = database.getAllGroups();
-
-		// set the adapter
-		myGroupsListAdapter = new MyGroupListAdapter(this, this);
-		myGroupsListView = (ListView) findViewById(R.id.listViewMyGroups);
-		myGroupsListView.setAdapter(myGroupsListAdapter);
-	}
-
-	@Override
-	public int getGroupCount()
-	{
-		return myGroups.size();
-	}
-
-	@Override
-	public Group getGroup(int index)
-	{
-		return myGroups.get(index);
 	}
 
 	/* all groups stuff */
 	private void setAllGroupsList()
 	{
-		// a thread that loads all the groups from the server
 
-		new AsyncTask<Boolean, Boolean, Boolean>()
-		{
+		// at first the list is empty
+		allgroups = new ArrayList<Group>();
 
-			ProgressDialog progressDialog;
-
-			@Override
-			protected void onPreExecute()
-			{
-				progressDialog = ProgressDialog
-						.show(SyncActivity.this, "Loading", "Loading groups");
-			}
-
-			@Override
-			protected Boolean doInBackground(Boolean... params)
-			{
-				allgroups = WebMinion.getAllGroups();
-
-				return true;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result)
-			{
-				progressDialog.dismiss();
-
-				// set the adapter
-				allGroupsListAdapter = new AllGroupsListAdapter(SyncActivity.this,
-						SyncActivity.this);
-				allGroupsListView = (ListView) findViewById(R.id.listViewAllGroups);
-				allGroupsListView.setAdapter(allGroupsListAdapter);
-			}
-		}.execute(true);
-
+		// set the adapter
+		allGroupsListAdapter = new AllGroupsListAdapter(SyncActivity.this, SyncActivity.this);
+		allGroupsListView = (ListView) findViewById(R.id.listViewAllGroups);
+		allGroupsListView.setAdapter(allGroupsListAdapter);
 	}
 
 	@Override
@@ -171,6 +213,54 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 	public Group getUnsyncedGroup(int index)
 	{
 		return allgroups.get(index);
+	}
+
+	public void onSearchButtonClicked(View v)
+	{
+		// get the groups that match those tags from the server
+		new AsyncTask<Boolean, Boolean, Boolean>()
+		{
+
+			ProgressDialog progressDialog;
+
+			@Override
+			protected void onPreExecute()
+			{
+				progressDialog = ProgressDialog.show(SyncActivity.this, "Searching",
+						"Searching for groups");
+			}
+
+			@Override
+			protected Boolean doInBackground(Boolean... params)
+			{
+				// reference to the edit texts
+				AutoCompleteTextView graduationYearEditText = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewGraduationYeaSearchr);
+				AutoCompleteTextView departmentEditText = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewDepartmentSearch);
+				AutoCompleteTextView tagEditText = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewTagSearch);
+
+				// get strings
+				String graduationYear = graduationYearEditText.getText().toString();
+				if (graduationYear.equals(""))
+					graduationYear = MyUtils.TAG_ANY;
+				String department = departmentEditText.getText().toString();
+				if (department.equals(""))
+					department = MyUtils.TAG_ANY;
+				String tag = tagEditText.getText().toString();
+				if (tag.equals(""))
+					tag = MyUtils.TAG_ANY;
+
+				// get groups
+				allgroups = WebMinion.getAllGroups(graduationYear, department, tag);
+				return true;
+			}
+
+			@Override
+			protected void onPostExecute(Boolean result)
+			{
+				progressDialog.dismiss();
+				allGroupsListAdapter.notifyDataSetChanged();
+			}
+		}.execute(true);
 	}
 
 	/* Syncing stuff */
@@ -209,9 +299,7 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 			protected void onPostExecute(Boolean result)
 			{
 				// notify both lists
-				myGroupsListAdapter.notifyDataSetChanged();
 				allGroupsListAdapter.notifyDataSetChanged();
-				myGroupsListView.setSelection(myGroups.size() - 1);
 
 				// dismiss the progress dialog
 				progressDialog.dismiss();
@@ -221,16 +309,6 @@ public class SyncActivity extends Activity implements MyGroupListListener, AllGr
 
 	}
 
-	@Override
-	public void unSync(int index)
-	{
-		database.deleteGroup(myGroups.get(index));
-		myGroups.remove(index);
-		myGroupsListAdapter.notifyDataSetChanged();
-		allGroupsListAdapter.notifyDataSetChanged();
-	}
-
-	@Override
 	public boolean isSynced(Group group)
 	{
 		// search for the id

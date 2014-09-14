@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -30,13 +31,19 @@ public class AddDeadlineActivity extends Activity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{
+	{		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_deadline);
 
 		setUpSpiiners();
 	}
-
+	@Override
+	public void onBackPressed()
+	{
+		NavUtils.navigateUpFromSameTask(this);
+		super.onBackPressed();
+	}
 	private void setUpSpiiners()
 	{
 		// Priority spinner

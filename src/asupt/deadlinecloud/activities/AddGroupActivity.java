@@ -26,7 +26,8 @@ public class AddGroupActivity extends Activity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{
+	{		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_group);
 		setupActionBar();
@@ -74,7 +75,12 @@ public class AddGroupActivity extends Activity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	@Override
+	public void onBackPressed()
+	{
+		NavUtils.navigateUpFromSameTask(this);
+		super.onBackPressed();
+	}
 	public void onButtonAddGroupClicked(View v)
 	{
 		// make a thread that asks the web minion to add the group

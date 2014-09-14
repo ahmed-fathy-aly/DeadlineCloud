@@ -6,40 +6,38 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.os.Build;
-import asupt.deadlinecloud.adapters.RemindersListAdapter;
-import asupt.deadlinecloud.adapters.RemindersListAdapter.RemindersListListener;
+import asupt.deadlinecloud.adapters.AllGroupsListAdapter;
+import asupt.deadlinecloud.adapters.MyGroupListAdapter;
+import asupt.deadlinecloud.adapters.MyGroupListAdapter.MyGroupListListener;
 import asupt.deadlinecloud.data.DatabaseController;
-import asupt.deadlinecloud.data.Reminder;
+import asupt.deadlinecloud.data.Group;
 import asuspt.deadlinecloud.R;
 import asuspt.deadlinecloud.R.layout;
 import asuspt.deadlinecloud.R.menu;
 
-public class RemindersActivity extends Activity implements RemindersListListener
- {
-
+public class MyGroupsActivity extends Activity implements MyGroupListListener
+{
+	/* stuff about my groups */
 	private DatabaseController database;
-	private ArrayList<Reminder> reminders;
-	private ExpandableListView listView;
-	private RemindersListAdapter listAdapter;
+	private ArrayList<Group> myGroups;
+	private MyGroupListAdapter myGroupsListAdapter;
+	private ListView myGroupsListView;
 
-@Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_reminders);
-		setupActionBar();
+		setContentView(R.layout.activity_my_groups);
 
-		// set the list
-		setRemindersList();
+		setupActionBar();
+		setMyGroupsList();
 	}
 
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar()
 	{
@@ -53,7 +51,7 @@ public class RemindersActivity extends Activity implements RemindersListListener
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.reminders, menu);
+		getMenuInflater().inflate(R.menu.my_groups, menu);
 		return true;
 	}
 
@@ -82,36 +80,38 @@ public class RemindersActivity extends Activity implements RemindersListListener
 		NavUtils.navigateUpFromSameTask(this);
 		super.onBackPressed();
 	}
-	
-	
-	private void setRemindersList()
+
+	private void setMyGroupsList()
 	{
-		// get the reminders from the database
+		// get the groups
 		database = new DatabaseController(this);
-		reminders = database.getAllReminders();
+		myGroups = database.getAllGroups();
 
-		// make the list stuff
-		listView = (ExpandableListView) findViewById(R.id.expandableListReminders);
-		listAdapter = new RemindersListAdapter(this, listView, this);
-		listView.setAdapter(listAdapter);
-
+		// set the adapter
+		myGroupsListAdapter = new MyGroupListAdapter(this, this);
+		myGroupsListView = (ListView) findViewById(R.id.listViewMyGroupslist);
+		myGroupsListView.setAdapter(myGroupsListAdapter);
 	}
 
-	public int getRemindersCount()
+
+
+	@Override
+	public int getGroupCount()
 	{
-		return reminders.size();
+		return myGroups.size();
 	}
 
 	@Override
-	public Reminder getReminder(int index)
+	public Group getGroup(int index)
 	{
-		return reminders.get(index);
+		return myGroups.get(index);
 	}
 
 	@Override
-	public void removeReminder(int index)
+	public void unSync(int index)
 	{
-		reminders.remove(index);
-		listAdapter.notifyDataSetChanged();
+		database.deleteGroup(myGroups.get(index));
+		myGroups.remove(index);
+		myGroupsListAdapter.notifyDataSetChanged();
 	}
 }

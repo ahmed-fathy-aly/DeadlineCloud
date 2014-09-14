@@ -8,29 +8,48 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SyncActivity" >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical" >
+        android:layout_weight="1" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="My Groups"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#0099cc" />
-
-        <ListView
-            android:id="@+id/listViewMyGroups"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:choiceMode="singleChoice"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin" >
-        </ListView>
-    </LinearLayout>
+            android:orientation="vertical" >
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextViewGraduationYeaSearchr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Graduation Year" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextViewDepartmentSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Department" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextViewTagSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Tag" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/buttonSearchGroups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@drawable/round_button_selector"
+        android:text="Search"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:onClick = "onSearchButtonClicked" />
 
     <View
         android:layout_width="match_parent"
@@ -43,14 +62,6 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:orientation="vertical" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="All Groups"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#0099cc" />
 
         <ListView
             android:id="@+id/listViewAllGroups"
