@@ -129,10 +129,10 @@ public class WebMinion
 					Log.i("RESPONSE", String.valueOf(group.getInt("subscribers_count")));
 					Group g = new Group(group.getString("name"),
 							String.valueOf(group.getInt("id")), group.getInt("subscribers_count"));
-					g.setGraduationYear(String.valueOf(group.getString("graduation_year_name")));
+					g.setGraduationYear(group.getString("graduation_year_name"));
 					g.setDescirption(group.getString("description"));
-					g.setDepartment(String.valueOf(group.getString("department_name")));
-					g.setTag(String.valueOf(group.getString("tag_name")));
+					g.setDepartment(group.getString("department_name"));
+					g.setTag(group.getString("tag_name"));
 					groups.add(g);
 					Log.i("RESPONSE", "4");
 				}
@@ -356,7 +356,26 @@ public class WebMinion
 	
 	public static void addAdmin(String groupId, String gmailAddress, String newAdminMail)
 	{
-		//TODO make newAdminMail able ot add deadline to the group
+		HttpPost httppost = new HttpPost(initUrl + "groups/" + groupId + "/admins.json");
+
+		try
+		{
+			// Add your data
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("phone_id", gmailAddress));
+			nameValuePairs.add(new BasicNameValuePair("new_phone_id", newAdminMail));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+			// Execute HTTP Post Request
+			HttpResponse response = client.execute(httppost);
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			Log.i("RESPONSE", response_str);
+
+		} catch (Exception ex)
+		{
+			Log.e("Debug", "error: " + ex.getMessage(), ex);
+		}
 		
 	}
 
