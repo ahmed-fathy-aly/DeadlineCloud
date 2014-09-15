@@ -10,5 +10,6 @@
     <string name="title_activity_reminders">Reminders</string>
     <string name="title_activity_add_group">New Group</string>
     <string name="title_activity_my_groups">MyGroupsActivity</string>
+    <string name="title_activity_activity_admin_tools">Admin tools</string>
 
 </resources>

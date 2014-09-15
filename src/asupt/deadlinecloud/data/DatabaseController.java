@@ -16,7 +16,7 @@ public class DatabaseController extends SQLiteOpenHelper
 {
 	/* Data base constants */
 	private static final String DATABASE_NAME = "asuptDeadlineCloudDatabase";
-	private static final int DATABASE_VERSION = 11;
+	private static final int DATABASE_VERSION = 13;
 
 	/* Deadline table */
 	private static final String DEADLINES_TABLE_NAME = "deadlinesTable";
@@ -34,6 +34,9 @@ public class DatabaseController extends SQLiteOpenHelper
 	private static final String KEY_Group_DATABASE_ID = "groupDatabaseId";
 	private static final String KEY_Group_NAME = "groupName";
 	private static final String KEY_Group_ID = "groupID";
+	private static final String KEY_Group_YEAR = "groupYear";
+	private static final String KEY_Group_DEPARTMENT = "groupDepartment";
+	private static final String KEY_Group_TAG = "groupTag";
 
 	public DatabaseController(Context context)
 	{
@@ -51,7 +54,8 @@ public class DatabaseController extends SQLiteOpenHelper
 
 		String CREATE_GROUPS_TABLE = "CREATE TABLE IF NOT EXISTS " + GROUPS_TABLE_NAME + "("
 				+ KEY_Group_DATABASE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-				+ KEY_Group_ID + " TEXT," + KEY_Group_NAME + " TEXT" + ")";
+				+ KEY_Group_ID + " TEXT," + KEY_Group_YEAR + " TEXT," + KEY_Group_DEPARTMENT
+				+ " TEXT," + KEY_Group_TAG + " TEXT," + KEY_Group_NAME + " TEXT" + ")";
 
 		db.execSQL(CREATE_DEADLINES_TABLE);
 		db.execSQL(CREATE_GROUPS_TABLE);
@@ -88,18 +92,18 @@ public class DatabaseController extends SQLiteOpenHelper
 				deadline.setDescription(cursor.getString(cursor
 						.getColumnIndex(KEY_DEADLINE_DESCRIPTION)));
 				deadline.setGroupName(cursor.getString(cursor.getColumnIndex(KEY_DEADLINE_GROUP)));
-				
+
 				String year, month, day;
 				year = cursor.getString(cursor.getColumnIndex(KEY_YEAR));
 				month = cursor.getString(cursor.getColumnIndex(KEY_MONTH));
 				day = cursor.getString(cursor.getColumnIndex(KEY_DAY));
-				
+
 				Calendar calendar = new GregorianCalendar();
 				calendar.set(Calendar.YEAR, Integer.parseInt(year));
 				calendar.set(Calendar.MONTH, Integer.parseInt(month));
 				calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
 				deadline.setCalendar(calendar);
-				
+
 				deadline.setWebPriority(Integer.parseInt(cursor.getString(cursor
 						.getColumnIndex(KEY_PRIORITY))));
 				deadline.setDatabaseId(cursor.getInt(cursor.getColumnIndex(KEY_DEADLINE_ID)));
@@ -145,8 +149,6 @@ public class DatabaseController extends SQLiteOpenHelper
 	{
 		ArrayList<Reminder> result = new ArrayList<Reminder>();
 
-	
-
 		return result;
 	}
 
@@ -172,9 +174,12 @@ public class DatabaseController extends SQLiteOpenHelper
 				// get the group info
 				Group group = new Group();
 
+				group.setDatabaseId(cursor.getInt(cursor.getColumnIndex(KEY_Group_DATABASE_ID)));
 				group.setId(cursor.getString(cursor.getColumnIndex(KEY_Group_ID)));
 				group.setName(cursor.getString(cursor.getColumnIndex(KEY_Group_NAME)));
-				group.setDatabaseId(cursor.getInt(cursor.getColumnIndex(KEY_Group_DATABASE_ID)));
+				group.setGraduationYear(cursor.getString(cursor.getColumnIndex(KEY_Group_YEAR)));
+				group.setDepartment(cursor.getString(cursor.getColumnIndex(KEY_Group_DEPARTMENT)));
+				group.setTag(cursor.getString(cursor.getColumnIndex(KEY_Group_TAG)));
 
 				groups.add(group);
 				cursor.moveToNext();
@@ -192,6 +197,9 @@ public class DatabaseController extends SQLiteOpenHelper
 		ContentValues entry = new ContentValues();
 		entry.put(KEY_Group_ID, group.getId());
 		entry.put(KEY_Group_NAME, group.getName());
+		entry.put(KEY_Group_YEAR, group.getGraduationYear());
+		entry.put(KEY_Group_DEPARTMENT, group.getDepartment());
+		entry.put(KEY_Group_TAG, group.getTag());
 
 		// insert and wrap it up
 		long id = db.insert(GROUPS_TABLE_NAME, null, entry);

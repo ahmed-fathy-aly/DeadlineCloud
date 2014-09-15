@@ -1,34 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="1dp"
     android:layout_marginBottom="1dp"
-    android:orientation="horizontal" >
-
-    <TextView
-        android:id="@+id/textViewMyGroupName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0"
-        android:text="Group Name"
-        android:textColor="#ff444444"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    android:layout_marginTop="1dp"
+    android:background="@drawable/group_list_item_selector"
+    android:orientation="horizontal"
+    android:padding="10dp" >
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="right" >
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/buttonmyGroupUnSync"
+        <TextView
+            android:id="@+id/textViewMyGroupName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_button_selector"
-            android:textColor="#ffffffff"
-            android:text="UnSync" />
+            android:layout_gravity="center_horizontal"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textViewMyGroupYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textViewMyGroupDepartment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textViewMyGroupTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
 </LinearLayout>

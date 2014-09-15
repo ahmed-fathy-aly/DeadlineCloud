@@ -11,7 +11,7 @@ import android.widget.TextView;
 import asupt.deadlinecloud.data.Group;
 import asuspt.deadlinecloud.R;
 
-public class MyGroupListAdapter extends BaseAdapter
+public class MyGroupGridAdapter extends BaseAdapter
 {
 	public interface MyGroupListListener
 	{
@@ -26,7 +26,7 @@ public class MyGroupListAdapter extends BaseAdapter
 	private Context context;
 	private MyGroupListListener listener;
 
-	public MyGroupListAdapter(Context context, MyGroupListListener listener)
+	public MyGroupGridAdapter(Context context, MyGroupListListener listener)
 	{
 		this.context = context;
 		this.listener = listener;
@@ -69,16 +69,17 @@ public class MyGroupListAdapter extends BaseAdapter
 		TextView groupName = (TextView) convertView.findViewById(R.id.textViewMyGroupName);
 		groupName.setText(group.getName());
 
-		// unsync button
-		Button unsyncButton = (Button) convertView.findViewById(R.id.buttonmyGroupUnSync);
-		unsyncButton.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View arg0)
-			{
-				listener.unSync(index);
-			}
-		});
+		// group year
+		TextView groupYear = (TextView) convertView.findViewById(R.id.textViewMyGroupYear);
+		groupYear.setText(group.getGraduationYear());
+		
+		// group department
+		TextView groupDepartment= (TextView) convertView.findViewById(R.id.textViewMyGroupDepartment);
+		groupDepartment.setText(group.getDepartment());
+		
+		// group tag
+		TextView groupTag = (TextView) convertView.findViewById(R.id.textViewMyGroupTag);
+		groupTag.setText(group.getTag());
 
 		return convertView;
 	}

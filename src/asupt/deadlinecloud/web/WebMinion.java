@@ -28,6 +28,7 @@ import android.util.Patterns;
 import asupt.deadlinecloud.data.Deadline;
 import asupt.deadlinecloud.data.Group;
 import asupt.deadlinecloud.data.Deadline.Priorirty;
+import asupt.deadlinecloud.utils.MyUtils;
 
 public class WebMinion
 {
@@ -91,17 +92,22 @@ public class WebMinion
 	}
 
 	/**
-	 * @param tag 
-	 * @param department 
-	 * @param graduationYear 
+	 * @param tag
+	 * @param department
+	 * @param graduationYear
 	 * @return a list of all groups including each groups's name, id, number of
 	 *         subscribers
 	 */
 	public static ArrayList<Group> getAllGroups(String graduationYear, String department, String tag)
 	{
-		// modify here.....if graduationyear or department or tag == Myutils.TAG_ANY then return all groups with those tags
-		// Each group returned mush match ALL those tags
-		HttpGet httpget = new HttpGet(initUrl + "groups.json");
+		String finalUrl = initUrl + "groups.json?";
+		if (graduationYear != MyUtils.TAG_ANY)
+			finalUrl += "&graduation_year=" + graduationYear;
+		if (department != MyUtils.TAG_ANY)
+			finalUrl += "&department=" + department;
+		if (tag != MyUtils.TAG_ANY)
+			finalUrl += "&tag=" + tag;
+		HttpGet httpget = new HttpGet(finalUrl);
 		ArrayList<Group> groups = new ArrayList<Group>();
 		try
 		{
@@ -125,8 +131,8 @@ public class WebMinion
 							String.valueOf(group.getInt("id")), group.getInt("subscribers_count"));
 					g.setGraduationYear(String.valueOf(group.getString("graduation_year_name")));
 					g.setDescirption(group.getString("description"));
-					g.setDepartment(String.valueOf("department_name"));
-					g.setTag(String.valueOf("tag_name"));
+					g.setDepartment(String.valueOf(group.getString("department_name")));
+					g.setTag(String.valueOf(group.getString("tag_name")));
 					groups.add(g);
 					Log.i("RESPONSE", "4");
 				}
@@ -345,6 +351,13 @@ public class WebMinion
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
 		return result;
+	}
+
+	
+	public static void addAdmin(String groupId, String gmailAddress, String newAdminMail)
+	{
+		//TODO make newAdminMail able ot add deadline to the group
+		
 	}
 
 }
