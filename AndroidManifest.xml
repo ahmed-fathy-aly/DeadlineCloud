@@ -10,8 +10,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-
-    <application
+<uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+<uses-permission android:name="android.permission.READ_CALENDAR"/>
+   
+<application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -74,8 +76,16 @@
                 android:value="asupt.deadlinecloud.activities.HomeActivity" />
         </activity>
         <activity
-            android:name="asuspt.deadlinecloud.ActivityAdminTools"
+            android:name="asupt.deadlinecloud.activities.AdminToolsActivity"
             android:label="@string/title_activity_activity_admin_tools"
+            android:parentActivityName="asupt.deadlinecloud.activities.MyGroupsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="asupt.deadlinecloud.activities.MyGroupsActivity" />
+        </activity>
+        <activity
+            android:name="asupt.deadlinecloud.activities.GroupDeadlineActivity"
+            android:label="@string/title_activity_group_deadline"
             android:parentActivityName="asupt.deadlinecloud.activities.MyGroupsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

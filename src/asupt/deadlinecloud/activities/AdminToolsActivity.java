@@ -1,4 +1,4 @@
-package asuspt.deadlinecloud;
+package asupt.deadlinecloud.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -12,12 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import asupt.deadlinecloud.activities.SyncActivity;
 import asupt.deadlinecloud.data.Group;
 import asupt.deadlinecloud.utils.MyUtils;
 import asupt.deadlinecloud.web.WebMinion;
+import asuspt.deadlinecloud.R;
+import asuspt.deadlinecloud.R.id;
+import asuspt.deadlinecloud.R.layout;
+import asuspt.deadlinecloud.R.menu;
 
-public class ActivityAdminTools extends Activity
+public class AdminToolsActivity extends Activity
 {
 	/* string got from the intent */
 	String gmailAddress;
@@ -86,7 +89,7 @@ public class ActivityAdminTools extends Activity
 			protected void onPreExecute()
 			{
 				// make a progress dialog
-				progressDialog = ProgressDialog.show(ActivityAdminTools.this, "Syncing",
+				progressDialog = ProgressDialog.show(AdminToolsActivity.this, "Syncing",
 						"Syncing...");
 			}
 

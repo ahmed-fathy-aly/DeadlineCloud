@@ -28,22 +28,37 @@ public class AddDeadlineActivity extends Activity
 {
 
 	private ArrayList<Group> groups;
+	String groupId;
+	String groupName;
+	String gmailAddress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+	{
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_deadline);
 
+		// check if we have a certain group called with the intent
+		if (getIntent().getExtras().containsKey(MyUtils.INTENT_GROUP_ID))
+		{
+			groupId = getIntent().getExtras().getString(MyUtils.INTENT_GROUP_ID);
+			groupName = getIntent().getExtras().getString(MyUtils.INTENT_GROUP_NAME);
+			gmailAddress = getIntent().getExtras().getString(MyUtils.INTENT_GMAIL_ADDRESS);
+		} else
+			groupId = MyUtils.TAG_ANY;
+
 		setUpSpiiners();
 	}
+
 	@Override
 	public void onBackPressed()
 	{
 		NavUtils.navigateUpFromSameTask(this);
 		super.onBackPressed();
 	}
+
 	private void setUpSpiiners()
 	{
 		// Priority spinner
@@ -56,11 +71,17 @@ public class AddDeadlineActivity extends Activity
 
 		// group names
 		ArrayList<String> groupNames = new ArrayList<String>();
-		DatabaseController database = new DatabaseController(this);
-		groups = database.getAllGroups();
-		groupNames.add("Local");
-		for (Group group : groups)
-			groupNames.add(group.getName());
+		if (groupId.equals(MyUtils.TAG_ANY))
+		{
+			DatabaseController database = new DatabaseController(this);
+			groups = database.getAllGroups();
+			groupNames.add("Local");
+			for (Group group : groups)
+				groupNames.add(group.getName());
+		} else
+		{
+			groupNames.add(groupName);
+		}
 
 		// Group spinner
 		Spinner groupSpinner = (Spinner) findViewById(R.id.spinnerGroup);
@@ -114,24 +135,31 @@ public class AddDeadlineActivity extends Activity
 		// group
 		Spinner groupSpinner = (Spinner) findViewById(R.id.spinnerGroup);
 		idx = groupSpinner.getSelectedItemPosition();
-		if (idx == 0)
+		if (groupId.equals(MyUtils.TAG_ANY))
 		{
-			// local string
-			deadline.setGroupName(Deadline.localString);
+			if (idx == 0)
+			{
+				// local string
+				deadline.setGroupName(Deadline.localString);
 
-			// add deadline and leave
-			DeadlinesActivity.addDeadline(deadline);
-			finish();
+				// add deadline and leave
+				DeadlinesActivity.addDeadline(deadline);
+				finish();
+			} else
+			{
+				Group group = groups.get(idx - 1);
+				deadline.setGroupName(group.getName());
+				addDeadline(deadline, group.getId(), group.getName());
+			}
 		} else
 		{
-			Group group = groups.get(idx - 1);
-			deadline.setGroupName(group.getName());
-			addDeadline(deadline, group);
+			deadline.setGroupName(groupName);
+			addDeadline(deadline, groupId, groupName);
 		}
-
 	}
 
-	private void addDeadline(final Deadline deadline, final Group group)
+	private void addDeadline(final Deadline deadline, final String destGroupId,
+			final String destGroupName)
 	{
 		// asks minion to add the deadline
 		new AsyncTask<Boolean, Boolean, Boolean>()
@@ -150,9 +178,8 @@ public class AddDeadlineActivity extends Activity
 			protected Boolean doInBackground(Boolean... params)
 			{
 				// ask the minion to add it
-				String gmailId = WebMinion.getGmailId(AddDeadlineActivity.this);
-				message = "Deadline added to" + group.getName() + "\nby " + gmailId;
-				WebMinion.postDeadline(group.getId(), gmailId, deadline);
+				message = "Deadline added to " + destGroupName + "\nby  " + gmailAddress;
+				WebMinion.postDeadline(destGroupId, gmailAddress, deadline);
 				return true;
 			}
 
@@ -167,7 +194,7 @@ public class AddDeadlineActivity extends Activity
 				Intent returnIntent = new Intent();
 				setResult(RESULT_OK, returnIntent);
 				finish();
-				
+
 			}
 
 		}.execute(true);

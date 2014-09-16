@@ -27,7 +27,6 @@ import asupt.deadlinecloud.adapters.MyGroupGridAdapter.MyGroupListListener;
 import asupt.deadlinecloud.data.DatabaseController;
 import asupt.deadlinecloud.data.Group;
 import asupt.deadlinecloud.utils.MyUtils;
-import asuspt.deadlinecloud.ActivityAdminTools;
 import asuspt.deadlinecloud.R;
 
 public class MyGroupsActivity extends Activity implements MyGroupListListener
@@ -116,13 +115,12 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 		if (item.getTitle().equals("UnSync"))
 		{
 			unSync(acmi.position);
-		}
-		else if (item.getTitle().equals("Admin tools"))
+		} else if (item.getTitle().equals("Admin tools"))
 		{
-			// make a dialog from which the user chooses his account		
+			// make a dialog from which the user chooses his account
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Choose you gmail-account");
-			
+
 			// list of accounts
 			final ArrayList<String> gUsernameList = MyUtils.getGmailAccounts(this);
 			ListView lv = new ListView(this);
@@ -136,14 +134,14 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 					// when one of them clicked open the admin tools activity
 					String gmailAddress = gUsernameList.get(position);
 					String groupId = myGroups.get(acmi.position).getId();
-					Intent intent = new Intent(MyGroupsActivity.this, ActivityAdminTools.class);
+					Intent intent = new Intent(MyGroupsActivity.this, AdminToolsActivity.class);
 					intent.putExtra(MyUtils.INTENT_GMAIL_ADDRESS, gmailAddress);
 					intent.putExtra(MyUtils.INTENT_GROUP_ID, groupId);
 					startActivity(intent);
 				}
 			});
 			builder.setView(lv);
-			
+
 			// cancel button
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
 			{
@@ -161,7 +159,6 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 	}
 
 	/* groups stuff */
-
 	private void setMyGroupsList()
 	{
 		// get the groups
@@ -175,6 +172,20 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 
 		// register for context menu
 		registerForContextMenu(myGroupsGridView);
+
+		// onClick listener
+		myGroupsGridView.setOnItemClickListener(new OnItemClickListener()
+		{
+
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+			{
+				// open the group deadline activity
+				Intent intent = new Intent(MyGroupsActivity.this, GroupDeadlineActivity.class);
+				intent.putExtra(MyUtils.INTENT_GROUP_ID, myGroups.get(arg2).getId());
+				intent.putExtra(MyUtils.INTENT_GROUP_NAME, myGroups.get(arg2).getName());
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override

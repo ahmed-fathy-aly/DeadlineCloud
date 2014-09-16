@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_blue"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:context=".DeadlinesActivity" >
+
+    <ExpandableListView
+        android:id="@+id/expandableListMyGroupDeadlinesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:childDivider="#00000000"
+        android:divider="#00000000"
+        android:dividerHeight="0dp"
+        android:groupIndicator="@null"
+        android:overScrollMode="always" 
+        >
+    </ExpandableListView>
+
+</LinearLayout>

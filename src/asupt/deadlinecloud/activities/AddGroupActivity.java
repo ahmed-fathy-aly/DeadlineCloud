@@ -23,16 +23,19 @@ import asuspt.deadlinecloud.R;
 
 public class AddGroupActivity extends Activity
 {
+	String gmailAddress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+	{
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_group);
-		setupActionBar();
 
-		AutoCompleteTextView graduationYear = (AutoCompleteTextView) findViewById(R.id.editTextGraduationYear);
+		// get gmail address from intent
+		gmailAddress = getIntent().getExtras().getString(MyUtils.INTENT_GMAIL_ADDRESS);
+		setupActionBar();
 		setAutoCompete();
 
 	}
@@ -75,12 +78,14 @@ public class AddGroupActivity extends Activity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	@Override
 	public void onBackPressed()
 	{
 		NavUtils.navigateUpFromSameTask(this);
 		super.onBackPressed();
 	}
+
 	public void onButtonAddGroupClicked(View v)
 	{
 		// make a thread that asks the web minion to add the group
@@ -106,16 +111,16 @@ public class AddGroupActivity extends Activity
 				AutoCompleteTextView graduationYearEditText = (AutoCompleteTextView) findViewById(R.id.editTextGraduationYear);
 				AutoCompleteTextView departmentEditText = (AutoCompleteTextView) findViewById(R.id.editTextDepartment);
 				AutoCompleteTextView tagEditText = (AutoCompleteTextView) findViewById(R.id.editTextTag);
-				
+
 				String groupName = groupNamEditText.getText().toString();
-				String gmailId = WebMinion.getGmailId(AddGroupActivity.this);
 				String graduationYear = graduationYearEditText.getText().toString();
 				String department = departmentEditText.getText().toString();
 				String tag = tagEditText.getText().toString();
 				String desciption = descriptionEditText.getText().toString();
-				
-				WebMinion.addGroup(groupName, gmailId, graduationYear, department, tag, desciption);
-				message = "added " + groupName + " by " + gmailId;
+
+				WebMinion.addGroup(groupName, gmailAddress, graduationYear, department, tag,
+						desciption);
+				message = "added " + groupName + " by " + gmailAddress;
 				return true;
 			}
 

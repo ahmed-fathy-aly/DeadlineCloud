@@ -144,6 +144,18 @@ public class DatabaseController extends SQLiteOpenHelper
 				KEY_DEADLINE_ID + "=" + deadline.getDatabaseId(), null);
 	}
 
+	public ArrayList<Deadline> getGroupDeadlines(String groupName)
+	{
+		ArrayList<Deadline> result = new ArrayList<Deadline>();
+		
+		ArrayList<Deadline> allDeadlines = getAllDeadlines();
+		for (Deadline deadline : allDeadlines) 
+			if (deadline.getGroupName().equals(groupName))
+				result.add(deadline);
+			
+		return result;
+	}
+
 	/* Reminders */
 	public ArrayList<Reminder> getAllReminders()
 	{
@@ -212,5 +224,8 @@ public class DatabaseController extends SQLiteOpenHelper
 		getWritableDatabase().delete(GROUPS_TABLE_NAME,
 				KEY_Group_DATABASE_ID + "=" + group.getDatabaseId(), null);
 	}
+
+	
+
 
 }

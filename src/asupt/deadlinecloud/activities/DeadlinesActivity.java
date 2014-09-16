@@ -37,7 +37,8 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+	{
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deadlines);
@@ -62,13 +63,14 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	@Override
 	public void onBackPressed()
 	{
 		NavUtils.navigateUpFromSameTask(this);
 		super.onBackPressed();
 	}
+
 	private void setDeadlinesList()
 	{
 		// get the deadlines
@@ -151,7 +153,7 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 		// add it to the list
 		deadlines.add(deadline);
 		listAdapter.notifyDataSetChanged();
-		
+
 		// add it to the database
 		database.addDedaline(deadline);
 	}
@@ -174,10 +176,12 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 		new AsyncTask<Boolean, Boolean, Boolean>()
 		{
 			ProgressDialog progressDialog;
+
 			@Override
 			protected void onPreExecute()
 			{
-				progressDialog = ProgressDialog.show(DeadlinesActivity.this, "Downloading", "Downloading deadlines...");
+				progressDialog = ProgressDialog.show(DeadlinesActivity.this, "Downloading",
+						"Downloading deadlines...");
 			}
 
 			@Override
@@ -196,11 +200,11 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 					for (Deadline deadline : groupDeadlines)
 						newDeadlines.add(deadline);
 				}
-				
+
 				// remove all the deadlines in the database
 				for (Deadline deadline : database.getAllDeadlines())
 					database.deleteDeadline(deadline);
-				
+
 				// add the new deadlines
 				deadlines.clear();
 				for (Deadline deadline : newDeadlines)
@@ -208,7 +212,7 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 					database.addDedaline(deadline);
 					deadlines.add(deadline);
 				}
-				
+
 				return true;
 			}
 
@@ -220,8 +224,6 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 				listAdapter.notifyDataSetChanged();
 			}
 
-		
-			
 		}.execute(true);
 	}
 }

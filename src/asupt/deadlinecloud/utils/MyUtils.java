@@ -19,6 +19,7 @@ public class MyUtils
 	public static final String TAG_ANY = "";
 	public static final String INTENT_GMAIL_ADDRESS = "gmailAddress";
 	public static final String INTENT_GROUP_ID = "groupId";
+	public static final String INTENT_GROUP_NAME = "groupName";
 
 	public static void addGroupToPreferences(String groupName, String id, Context context)
 	{

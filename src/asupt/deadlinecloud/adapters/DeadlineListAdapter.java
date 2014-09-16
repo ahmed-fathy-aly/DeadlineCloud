@@ -1,19 +1,18 @@
 package asupt.deadlinecloud.adapters;
 
+import java.util.Calendar;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import asupt.deadlinecloud.data.Deadline;
 import asupt.deadlinecloud.data.Reminder;
-import asupt.deadlinecloud.views.DeadlineView;
-import asupt.deadlinecloud.views.DeadlineView.DeadlineViewListener;
 import asuspt.deadlinecloud.R;
 
 public class DeadlineListAdapter extends BaseExpandableListAdapter
@@ -68,9 +67,10 @@ public class DeadlineListAdapter extends BaseExpandableListAdapter
 		// description
 		TextView description = (TextView) convertView.findViewById(R.id.textViewDeadineDescription);
 		description.setText(listener.getDeadline(groupPosition).getDescription());
-		
+
 		// delete button
-		ImageButton deletebutton = (ImageButton) convertView.findViewById(R.id.buttonDeadlineDelete);
+		ImageButton deletebutton = (ImageButton) convertView
+				.findViewById(R.id.buttonDeadlineDelete);
 		deletebutton.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View arg0)
@@ -112,39 +112,44 @@ public class DeadlineListAdapter extends BaseExpandableListAdapter
 	public View getGroupView(final int groupPosition, boolean isExpanded, View convertView,
 			ViewGroup parent)
 	{
-		// the listener
-		DeadlineViewListener DeadlineViewListener = new DeadlineViewListener()
+		// check if the view is null or inflated
+		if (convertView == null)
 		{
-			public void onViewClicked()
-			{
 
-				if (listView.isGroupExpanded(groupPosition))
-				{
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(R.layout.deadline_layout, null);
+		}
 
-					listView.collapseGroup(groupPosition);
-					selectedIndex = -1;
-				} else
-				{
-					// collapse any other view
-					if (selectedIndex != -1)
-						listView.collapseGroup(selectedIndex);
+		// title
+		Deadline deadline = listener.getDeadline(groupPosition);
+		TextView title = (TextView) convertView.findViewById(R.id.textViewDeadlineTitle);
+		title.setText(deadline.getTitle());
 
-					// expand this one
-					listView.expandGroup(groupPosition);
-					selectedIndex = groupPosition;
-				}
-			}
+		// date
+		TextView date = (TextView) convertView.findViewById(R.id.textViewDeadlineDate);
+		date.setText(deadline.getCalendar().get(Calendar.DAY_OF_MONTH) + "/"
+				+ ((deadline.getCalendar().get(Calendar.MONTH)) + 1) + "/"
+				+ (deadline.getCalendar().get(Calendar.YEAR) + 1900));
 
-			@Override
-			public void addReminder(Reminder reminder)
-			{
-				listener.addReminder(reminder);
-				
-			}
-		};
-		DeadlineView deadlineView = new DeadlineView(context, this.listener
-				.getDeadline(groupPosition), convertView, DeadlineViewListener);
-		return deadlineView;
+		// group
+		TextView group = (TextView) convertView.findViewById(R.id.textViewDeadlineGroup);
+		group.setText(deadline.getGroupName());
+
+		// days rem
+		TextView daysRem = (TextView) convertView.findViewById(R.id.textViewDeadlineDaysRem);
+		daysRem.setText(deadline.getRemainingDays() + "");
+
+		// priority
+		View prorityIndicator = convertView.findViewById(R.id.deadlinePriorityIndicator);
+		if (deadline.getPriority() == Deadline.Priorirty.HIGH)
+			prorityIndicator.setBackgroundColor(Deadline.HIGH_COLOR);
+		else if (deadline.getPriority() == Deadline.Priorirty.MEDIUM)
+			prorityIndicator.setBackgroundColor(Deadline.MID_COLOR);
+		else
+			prorityIndicator.setBackgroundColor(Deadline.LOW_COLOR);
+		
+		return convertView;
 	}
 
 	@Override

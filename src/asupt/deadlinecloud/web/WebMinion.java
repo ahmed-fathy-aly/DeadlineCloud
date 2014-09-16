@@ -374,7 +374,7 @@ public class WebMinion
 
 		} catch (Exception ex)
 		{
-			Log.e("Debug", "error: " + ex.getMessage(), ex);
+			Log.e("Game", "error: " + ex.getMessage(), ex);
 		}
 		
 	}

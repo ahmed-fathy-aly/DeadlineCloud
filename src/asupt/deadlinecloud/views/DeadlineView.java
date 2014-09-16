@@ -88,50 +88,51 @@ public class DeadlineView extends LinearLayout
 
 	private void setOnClickListeners()
 	{
-		// listener for the remind me button
-		Button reminderButton = (Button) findViewById(R.id.buttonDeadlineRemind);
-		reminderButton.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View arg0)
-			{
-				// make a dialog
-				final ReminderDialog reminderDialog = new ReminderDialog(context);
-				reminderDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				reminderDialog.setContentView(R.layout.reminder_dialog);
-				reminderDialog.setDeadline(deadline);
-				reminderDialog.show();
-
-				// cancel button listener
-				Button cancelButton = (Button) reminderDialog
-						.findViewById(R.id.buttonReminderCancel);
-				cancelButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						reminderDialog.dismiss();
-					}
-				});
-
-				// add button listener
-				Button addReminderButton = (Button) reminderDialog
-						.findViewById(R.id.buttonReminderAdd);
-				addReminderButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						// gather selected Date
-						Calendar c = reminderDialog.getSelectedTime();
-						addReminder(deadline, c);
-						reminderDialog.dismiss();
-					}
-
-				});
-
-			}
-		});
+		// // listener for the remind me button
+		// Button reminderButton = (Button)
+		// findViewById(R.id.buttonDeadlineRemind);
+		// reminderButton.setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View arg0)
+		// {
+		// // make a dialog
+		// final ReminderDialog reminderDialog = new ReminderDialog(context);
+		// reminderDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// reminderDialog.setContentView(R.layout.reminder_dialog);
+		// reminderDialog.setDeadline(deadline);
+		// reminderDialog.show();
+		//
+		// // cancel button listener
+		// Button cancelButton = (Button) reminderDialog
+		// .findViewById(R.id.buttonReminderCancel);
+		// cancelButton.setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v)
+		// {
+		// reminderDialog.dismiss();
+		// }
+		// });
+		//
+		// // add button listener
+		// Button addReminderButton = (Button) reminderDialog
+		// .findViewById(R.id.buttonReminderAdd);
+		// addReminderButton.setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v)
+		// {
+		// // gather selected Date
+		// Calendar c = reminderDialog.getSelectedTime();
+		// addReminder(deadline, c);
+		// reminderDialog.dismiss();
+		// }
+		//
+		// });
+		//
+		// }
+		// });
 	}
 
 	private void addReminder(Deadline deadline, Calendar c)
