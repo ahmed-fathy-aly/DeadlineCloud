@@ -6,7 +6,9 @@ import org.json.JSONException;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import android.R;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 import asupt.deadlinecloud.activities.DeadlinesActivity;
 import asupt.deadlinecloud.activities.HomeActivity;
 import asupt.deadlinecloud.data.Deadline;
@@ -62,7 +65,8 @@ public class GcmIntentService extends IntentService {
                 Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 Deadline d = new Deadline();
 				d.SetFromWeb(extras);
-				DeadlinesActivity.newDeadlineReceived(d);
+				Toast.makeText(this, "New Deadline here", Toast.LENGTH_SHORT).show();
+				notifyNewDeadline();
 				Log.i(TAG, "Received: " + extras.getString(("utc_time")));
                 Log.i(TAG, "Received: " + extras.toString());
             }
@@ -71,7 +75,29 @@ public class GcmIntentService extends IntentService {
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    // Put the message into a notification and post it.
+    private void notifyNewDeadline()
+	{
+    	NotificationManager notificationManager =
+    		    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    		int icon = android.R.drawable.ic_notification_overlay;
+    		CharSequence notiText = "Your notification from the service";
+    		long meow = System.currentTimeMillis();
+
+    		Notification notification = new Notification(icon, notiText, meow);
+
+    		Context context = getApplicationContext();
+    		CharSequence contentTitle = "Your notification";
+    		CharSequence contentText = "Some data has arrived!";
+    		Intent notificationIntent = new Intent(this, HomeActivity.class);
+    		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+    		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+
+    		int SERVER_DATA_RECEIVED = 1;
+    		notificationManager.notify(SERVER_DATA_RECEIVED, notification);		
+	}
+
+	// Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendNotification(String msg) {
@@ -93,4 +119,5 @@ public class GcmIntentService extends IntentService {
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
+
 }

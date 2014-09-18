@@ -13,6 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import asupt.deadlinecloud.adapters.DeadlineListAdapter;
@@ -173,9 +174,8 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 	/**
 	 * This method is called when a new deadline is added for a group you're following.
 	 */
-	public static void newDeadlineReceived(Deadline d) {
-		//TODO: Fathy bro, do your magic.
-		Log.i("Deadline",String.valueOf(d.getCalendar().getTime()));
+	public static void newDeadlineReceived(Deadline deadline, Context context) {
+		Toast.makeText(context, "New deadline", Toast.LENGTH_SHORT).show();
 	}
 	
 	private void refreshDeadline()
