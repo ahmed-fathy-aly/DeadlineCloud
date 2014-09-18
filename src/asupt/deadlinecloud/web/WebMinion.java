@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.R.bool;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
@@ -35,7 +36,38 @@ public class WebMinion
 
 	static HttpClient client = new DefaultHttpClient();
 	final static String initUrl = "http://mydeadlinecloud.herokuapp.com/";
-
+	
+	/**
+	 * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
+	 * or CCS to send messages to your app. Not needed for this demo since the
+	 * device sends upstream messages to a server that echoes back the message
+	 * using the 'from' address in the message.
+	 */
+	public static Boolean sendRegistrationId(String regId, String gmailId) {
+		Log.i("STH","SDH6");
+		HttpPost httppost = new HttpPost(initUrl + "users.json");
+		Log.i("STH","SDH7");
+		try
+		{
+			// Add your data
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("reg_id", regId));
+			nameValuePairs.add(new BasicNameValuePair("user[phone]", gmailId));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			Log.i("STH","SDH8");
+			// Execute HTTP Post Request
+			HttpResponse response = client.execute(httppost);
+			Log.i("STH","SDH9");
+			Log.i("RESPONSE", response.toString());
+			return (response.getStatusLine().getStatusCode() == 201);
+		} catch (Exception ex)
+		{
+			Log.e("Debug", "error: " + ex.getMessage(), ex);
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * @return the Gmail ID of the user.
 	 */
@@ -234,14 +266,7 @@ public class WebMinion
 				{
 					JSONObject deadline = res.getJSONObject(i);
 					Deadline d = new Deadline();
-					Calendar t = Calendar.getInstance();
-					t.setTimeInMillis(deadline.getLong("utc_time"));
-					t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
-					d.setCalendar(t);
-					d.setDescription(deadline.getString("description"));
-					d.setWebPriority(deadline.getInt("priority"));
-					d.setTitle(deadline.getString("name"));
-					d.setGroupName(deadline.getString("group_name"));
+					d.SetFromWeb(deadline);
 					deadlines.add(d);
 				}
 			}

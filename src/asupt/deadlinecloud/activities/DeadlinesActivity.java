@@ -169,7 +169,15 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 		Log.e("Game", reminder.getCalendar().toString());
 		database.addReminder(reminder);
 	}
-
+	
+	/**
+	 * This method is called when a new deadline is added for a group you're following.
+	 */
+	public static void newDeadlineReceived(Deadline d) {
+		//TODO: Fathy bro, do your magic.
+		Log.i("Deadline",String.valueOf(d.getCalendar().getTime()));
+	}
+	
 	private void refreshDeadline()
 	{
 		// get the deadlines from the server and add them
