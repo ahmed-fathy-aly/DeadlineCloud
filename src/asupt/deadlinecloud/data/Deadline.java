@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.json.JSONObject;
+
+import android.os.Bundle;
 import android.util.Log;
 
 public class Deadline
@@ -39,7 +42,41 @@ public class Deadline
 		this.groupName = "";
 		this.calendar = new GregorianCalendar();
 	}
-
+	
+	public void SetFromWeb(Bundle d) {
+		try {
+			Calendar t = Calendar.getInstance();
+			t.setTimeInMillis(Long.parseLong(d.getString("utc_time")));
+			t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
+			this.calendar = t;
+			this.description = d.getString("description");
+			this.setWebPriority(d.getInt("priority"));
+			this.title = d.getString("name");
+			this.groupName = d.getString("group_name");
+		}
+		catch (Exception ex)
+		{
+			Log.e("Debug", "error: " + ex.getMessage(), ex);
+		}
+	}
+	
+	public void SetFromWeb(JSONObject d) {
+		try {
+			Calendar t = Calendar.getInstance();
+			t.setTimeInMillis(d.getLong("utc_time"));
+			t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
+			this.calendar = t;
+			this.description = d.getString("description");
+			this.setWebPriority(d.getInt("priority"));
+			this.title = d.getString("name");
+			this.groupName = d.getString("group_name");
+		}
+		catch (Exception ex)
+		{
+			Log.e("Debug", "error: " + ex.getMessage(), ex);
+		}
+	}
+	
 	/* getters and setter */
 	public String getTitle()
 	{
