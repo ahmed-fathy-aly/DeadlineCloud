@@ -192,13 +192,13 @@ public class RemindersListAdapter extends BaseExpandableListAdapter
 		daysRem.setText(deadline.getRemainingDays() + "");
 
 		// priority
-		View prorityIndicator = convertView.findViewById(R.id.reminderPriorityIndicator);
-		if (deadline.getPriority() == Deadline.Priorirty.HIGH)
-			prorityIndicator.setBackgroundColor(Deadline.HIGH_COLOR);
-		else if (deadline.getPriority() == Deadline.Priorirty.MEDIUM)
-			prorityIndicator.setBackgroundColor(Deadline.MID_COLOR);
-		else
-			prorityIndicator.setBackgroundColor(Deadline.LOW_COLOR);
+//		View prorityIndicator = convertView.findViewById(R.id.reminderPriorityIndicator);
+//		if (deadline.getPriority() == Deadline.Priorirty.HIGH)
+//			prorityIndicator.setBackgroundColor(Deadline.HIGH_COLOR);
+//		else if (deadline.getPriority() == Deadline.Priorirty.MEDIUM)
+//			prorityIndicator.setBackgroundColor(Deadline.MID_COLOR);
+//		else
+//			prorityIndicator.setBackgroundColor(Deadline.LOW_COLOR);
 
 		// notificatiot date
 		TextView notificationDate = (TextView) convertView

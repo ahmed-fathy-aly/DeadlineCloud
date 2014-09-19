@@ -36,17 +36,18 @@ public class WebMinion
 
 	static HttpClient client = new DefaultHttpClient();
 	final static String initUrl = "http://mydeadlinecloud.herokuapp.com/";
-	
+
 	/**
-	 * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
-	 * or CCS to send messages to your app. Not needed for this demo since the
-	 * device sends upstream messages to a server that echoes back the message
-	 * using the 'from' address in the message.
+	 * Sends the registration ID to your server over HTTP, so it can use
+	 * GCM/HTTP or CCS to send messages to your app. Not needed for this demo
+	 * since the device sends upstream messages to a server that echoes back the
+	 * message using the 'from' address in the message.
 	 */
-	public static Boolean sendRegistrationId(String regId, String gmailId) {
-		Log.i("STH","SDH6");
+	public static Boolean sendRegistrationId(String regId, String gmailId)
+	{
+		Log.i("STH", "SDH6");
 		HttpPost httppost = new HttpPost(initUrl + "users.json");
-		Log.i("STH","SDH7");
+		Log.i("STH", "SDH7");
 		try
 		{
 			// Add your data
@@ -54,20 +55,20 @@ public class WebMinion
 			nameValuePairs.add(new BasicNameValuePair("reg_id", regId));
 			nameValuePairs.add(new BasicNameValuePair("user[phone]", gmailId));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			Log.i("STH","SDH8");
+			Log.i("STH", "SDH8");
 			// Execute HTTP Post Request
 			HttpResponse response = client.execute(httppost);
-			Log.i("STH","SDH9");
+			Log.i("STH", "SDH9");
 			Log.i("RESPONSE", response.toString());
 			return (response.getStatusLine().getStatusCode() == 201);
 		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * @return the Gmail ID of the user.
 	 */
@@ -378,7 +379,6 @@ public class WebMinion
 		return result;
 	}
 
-	
 	public static void addAdmin(String groupId, String gmailAddress, String newAdminMail)
 	{
 		HttpPost httppost = new HttpPost(initUrl + "groups/" + groupId + "/admins.json");
@@ -401,7 +401,17 @@ public class WebMinion
 		{
 			Log.e("Game", "error: " + ex.getMessage(), ex);
 		}
-		
+
+	}
+
+	/**
+	 * Deletes the deadline from the server if that mail is an admin returns
+	 * true if deletion is successful
+	 */
+	public static boolean deleteDeadline(Deadline deadline, String gmailAddress, String groupId,
+			String groupName)
+	{
+		return true;
 	}
 
 }

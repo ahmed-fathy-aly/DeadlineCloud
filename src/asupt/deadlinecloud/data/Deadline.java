@@ -32,6 +32,7 @@ public class Deadline
 	private Calendar calendar;
 	private String groupName;
 	private long databaseId;
+	private String webId;
 
 	/* Constructors */
 	public Deadline()
@@ -42,9 +43,11 @@ public class Deadline
 		this.groupName = "";
 		this.calendar = new GregorianCalendar();
 	}
-	
-	public void SetFromWeb(Bundle d) {
-		try {
+
+	public void SetFromWeb(Bundle d)
+	{
+		try
+		{
 			Calendar t = Calendar.getInstance();
 			t.setTimeInMillis(Long.parseLong(d.getString("utc_time")));
 			t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
@@ -53,15 +56,16 @@ public class Deadline
 			this.setWebPriority(d.getInt("priority"));
 			this.title = d.getString("name");
 			this.groupName = d.getString("group_name");
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
 	}
-	
-	public void SetFromWeb(JSONObject d) {
-		try {
+
+	public void SetFromWeb(JSONObject d)
+	{
+		try
+		{
 			Calendar t = Calendar.getInstance();
 			t.setTimeInMillis(d.getLong("utc_time"));
 			t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
@@ -70,13 +74,12 @@ public class Deadline
 			this.setWebPriority(d.getInt("priority"));
 			this.title = d.getString("name");
 			this.groupName = d.getString("group_name");
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
 	}
-	
+
 	/* getters and setter */
 	public String getTitle()
 	{
@@ -136,6 +139,16 @@ public class Deadline
 	public void setDatabaseId(long databaseId)
 	{
 		this.databaseId = databaseId;
+	}
+
+	public String getWebId()
+	{
+		return webId;
+	}
+
+	public void setWebId(String webId)
+	{
+		this.webId = webId;
 	}
 
 	/* Methods */

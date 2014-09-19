@@ -5,6 +5,8 @@
     android:background="@drawable/background_blue"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="1dp"
+    android:paddingBottom="1dp"
     tools:context=".DeadlinesActivity" >
 
     <ExpandableListView

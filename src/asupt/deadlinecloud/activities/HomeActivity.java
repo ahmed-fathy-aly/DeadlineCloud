@@ -37,16 +37,7 @@ public class HomeActivity extends Activity
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
-	/**
-	 * Substitute you own sender ID here. This is the project number you got
-	 * from the API Console, as described in "Getting Started."
-	 */
 	String SENDER_ID = "6365362741";
-
-	/**
-	 * Tag used on log messages. TODO: Remove this.
-	 */
 	static final String TAG = "GCMDemo";
 
 	GoogleCloudMessaging gcm;
@@ -63,21 +54,17 @@ public class HomeActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		context = getApplicationContext();
-
 		// Check device for Play Services APK. If check succeeds, proceed with
 		// GCM registration.
+		context = getApplicationContext();
 		Log.i("STH", "SDH1");
 		if (checkPlayServices())
 		{
-			Log.i("STH", "SDH2");
 			gcm = GoogleCloudMessaging.getInstance(this);
 			regid = getRegistrationId(context);
-			Log.i("STH", "SDH3");
 			if (regid.isEmpty())
 			{
 				registerInBackground();
-				Log.i("STH", "SDH4");
 			}
 		} else
 		{

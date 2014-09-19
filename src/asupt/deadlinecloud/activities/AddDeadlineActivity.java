@@ -187,9 +187,6 @@ public class AddDeadlineActivity extends Activity
 			protected void onPostExecute(Boolean result)
 			{
 				// dissmiss
-				Toast.makeText(AddDeadlineActivity.this, "Added deadlines", Toast.LENGTH_SHORT)
-						.show();
-				Toast.makeText(AddDeadlineActivity.this, message, Toast.LENGTH_SHORT).show();
 				progressDialog.dismiss();
 				Intent returnIntent = new Intent();
 				setResult(RESULT_OK, returnIntent);

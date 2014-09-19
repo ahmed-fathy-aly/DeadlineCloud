@@ -142,6 +142,8 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 			menu.add(0, v.getId(), 0, "Add to my deadlines");
 			menu.add(0, v.getId(), 0, "Add to Calendar");
 			menu.add(0, v.getId(), 0, "Add Reminder");
+			menu.add(0, v.getId(), 0, "Delete");
+			
 
 		}
 	}
@@ -160,8 +162,14 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		{
 			addReminder(deadlines.get(idx));
 		}
+		else if (item.getTitle().equals("Delete"))
+		{
+			deleteDeadline(deadlines.get(idx));
+		}
 		return super.onContextItemSelected(item);
 	}
+
+
 
 	/* stuff about the deadline list */
 	private void setDeadlinesList()
@@ -252,6 +260,7 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 	{
 		// make a dialog from which the user chooses his account
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog alertDialog = builder.create();
 		builder.setTitle("Choose you gmail-account");
 
 		// list of accounts
@@ -260,6 +269,18 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, android.R.id.text1, gUsernameList);
 		lv.setAdapter(adapter);
+
+		// cancel button
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int whichButton)
+			{
+				dialog.dismiss();
+			}
+		});
+		builder.setView(lv);
+		final Dialog dialog = builder.create();
+
 		lv.setOnItemClickListener(new OnItemClickListener()
 		{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -270,19 +291,10 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 				intent.putExtra(MyUtils.INTENT_GROUP_NAME, groupName);
 				intent.putExtra(MyUtils.INTENT_GMAIL_ADDRESS, gUsernameList.get(position));
 				startActivityForResult(intent, MyUtils.ADD_DEADLINES_REQUEST_CODE);
-			}
-		});
-		builder.setView(lv);
-
-		// cancel button
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int whichButton)
-			{
 				dialog.dismiss();
 			}
 		});
-		final Dialog dialog = builder.create();
+
 		dialog.show();
 
 	}
@@ -304,4 +316,79 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 
 	}
 
+	private void deleteDeadline(final Deadline deadline)
+	{
+		// take the dude's mail and ask the server to delete
+		// make a dialog from which the user chooses his account
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("Choose you gmail-account");
+			
+				// cancel button
+				builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int whichButton)
+					{
+						dialog.dismiss();
+					}
+				});
+
+				// list of accounts
+				final ArrayList<String> gUsernameList = MyUtils.getGmailAccounts(this);
+				ListView lv = new ListView(this);
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+						android.R.layout.simple_list_item_1, android.R.id.text1, gUsernameList);
+				lv.setAdapter(adapter);
+				builder.setView(lv);
+				
+				// on click 
+				final Dialog dialog = builder.create();
+				lv.setOnItemClickListener(new OnItemClickListener()
+				{
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+					{
+						// when one of them clicked delete that deadline
+						String gmailAddress = gUsernameList.get(position);
+						confirmDeleteDeadline(deadline, gmailAddress);
+						dialog.dismiss();
+					}
+
+
+				});
+
+
+				dialog.show();
+		
+	}
+	void confirmDeleteDeadline(final Deadline deadline, final String gmailAddress)
+	{
+		// make a thread that asks the web minion to delete the deadline
+		new AsyncTask<Boolean, Boolean, Boolean>(){
+			ProgressDialog progressDialog;
+			@Override
+			protected void onPreExecute()
+			{
+				progressDialog = ProgressDialog.show(GroupDeadlineActivity.this, "Deleting", "Deleting deadline...");
+			}
+			@Override
+			protected Boolean doInBackground(Boolean... params)
+			{
+				return WebMinion.deleteDeadline(deadline, gmailAddress, groupId, groupName);
+			}
+
+			@Override
+			protected void onPostExecute(Boolean result)
+			{
+				progressDialog.dismiss();
+				if (result == false)
+					Toast.makeText(GroupDeadlineActivity.this, "Couldn't delete", Toast.LENGTH_SHORT);
+				else
+					refreshDeadlines();
+			}
+
+
+		
+		}.execute(true);
+		}
+		
+	
 }
