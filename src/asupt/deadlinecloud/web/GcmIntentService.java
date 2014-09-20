@@ -1,11 +1,8 @@
 package asupt.deadlinecloud.web;
 
-import java.util.Calendar;
 import java.util.Random;
 
-import android.R;
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -15,8 +12,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.RemoteViews;
-import android.widget.Toast;
 import asupt.deadlinecloud.activities.HomeActivity;
 import asupt.deadlinecloud.activities.MyGroupsActivity;
 import asupt.deadlinecloud.data.DatabaseController;
@@ -70,10 +65,12 @@ public class GcmIntentService extends IntentService
 				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
 				Deadline d = new Deadline();
 				d.SetFromWeb(extras);
-
-				// do android stuff on the deadline
-				notifyNewDeadline(d);
-				addDeadlineToDatabase(d);
+				if (extras.getString("action") == "delete") {
+					removeDeadlineFromDatabase(d);
+				} else {
+					notifyNewDeadline(d);
+					addDeadlineToDatabase(d);
+				}
 				Log.i(TAG, "Received: " + extras.getString(("utc_time")));
 				Log.i(TAG, "Received: " + extras.toString());
 			}
@@ -87,7 +84,14 @@ public class GcmIntentService extends IntentService
 		// get reference to databaseController
 		DatabaseController database = new DatabaseController(this);
 		database.addDedaline(d);
-
+	}
+	
+	private void removeDeadlineFromDatabase(Deadline d)
+	{
+		// TODO: Check if this is enough.
+		// get reference to databaseController
+		DatabaseController database = new DatabaseController(this);
+		database.deleteDeadline(d);
 	}
 
 	private void notifyNewDeadline(Deadline deadline)

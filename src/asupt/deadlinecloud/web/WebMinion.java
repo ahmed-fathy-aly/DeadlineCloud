@@ -2,7 +2,6 @@ package asupt.deadlinecloud.web;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -11,6 +10,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -19,16 +19,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.R.bool;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
-import android.text.format.Time;
 import android.util.Log;
 import android.util.Patterns;
 import asupt.deadlinecloud.data.Deadline;
 import asupt.deadlinecloud.data.Group;
-import asupt.deadlinecloud.data.Deadline.Priorirty;
 import asupt.deadlinecloud.utils.MyUtils;
 
 public class WebMinion
@@ -411,7 +408,21 @@ public class WebMinion
 	public static boolean deleteDeadline(Deadline deadline, String gmailAddress, String groupId,
 			String groupName)
 	{
-		return true;
+		HttpDelete httpdelete = new HttpDelete(initUrl + "group/" + groupId + "/deadlines/" + deadline.getWebId() + ".json?phone_id=" + gmailAddress);
+		
+		try
+		{
+			// Execute HTTP Delete Request
+			HttpResponse response = client.execute(httpdelete);
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			Log.i("RESPONSE", response_str);
+			return (response.getStatusLine().getStatusCode() == 201);
+		} catch (Exception ex)
+		{
+			Log.e("Game", "error: " + ex.getMessage(), ex);
+		}
+		return false;
 	}
 
 }

@@ -33,6 +33,7 @@ public class Deadline
 	private String groupName;
 	private long databaseId;
 	private String webId;
+	private String groupId;
 
 	/* Constructors */
 	public Deadline()
@@ -43,7 +44,11 @@ public class Deadline
 		this.groupName = "";
 		this.calendar = new GregorianCalendar();
 	}
-
+	
+	public String getGroupId() {
+		return this.groupId;
+	}
+	
 	public void SetFromWeb(Bundle d)
 	{
 		try
@@ -56,6 +61,8 @@ public class Deadline
 			this.setWebPriority(d.getInt("priority"));
 			this.title = d.getString("name");
 			this.groupName = d.getString("group_name");
+			this.webId = d.getString("id");
+			this.groupId = d.getString("group_id");
 		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
@@ -74,6 +81,8 @@ public class Deadline
 			this.setWebPriority(d.getInt("priority"));
 			this.title = d.getString("name");
 			this.groupName = d.getString("group_name");
+			this.webId = d.getString("id");
+			this.groupId = d.getString("group_id");
 		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
