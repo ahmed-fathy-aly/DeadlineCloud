@@ -117,9 +117,9 @@ public class AddGroupActivity extends Activity
 				String department = departmentEditText.getText().toString();
 				String tag = tagEditText.getText().toString();
 				String desciption = descriptionEditText.getText().toString();
-
+				Boolean is_public = false; // TODO: Ask the user if he wants it to be public.
 				WebMinion.addGroup(groupName, gmailAddress, graduationYear, department, tag,
-						desciption);
+						desciption, is_public);
 				message = "added " + groupName + " by " + gmailAddress;
 				return true;
 			}
