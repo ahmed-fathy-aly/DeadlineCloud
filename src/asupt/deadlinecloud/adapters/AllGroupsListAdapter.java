@@ -8,13 +8,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
 import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextClock;
 import android.widget.TextView;
 import asupt.deadlinecloud.data.Group;
 import asuspt.deadlinecloud.R;
 
-public class AllGroupsListAdapter extends BaseAdapter
+public class AllGroupsListAdapter extends BaseExpandableListAdapter
 {
 	public interface AllGroupsListListener
 	{
@@ -40,25 +42,68 @@ public class AllGroupsListAdapter extends BaseAdapter
 	}
 
 	@Override
-	public int getCount()
-	{
-		return listener.getAllGroupsCount();
-	}
-
-	@Override
-	public Object getItem(int arg0)
+	public Object getChild(int groupPosition, int childPosition)
 	{
 		return null;
 	}
 
 	@Override
-	public long getItemId(int arg0)
+	
+public long getChildId(int groupPosition, int childPosition)
 	{
 		return 0;
 	}
 
 	@Override
-	public View getView(final int index, View convertView, ViewGroup arg2)
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+			View convertView, ViewGroup parent)
+	{
+		
+		if (convertView == null)
+			convertView = new TextView(context);
+		
+		Group group = listener.getUnsyncedGroup(groupPosition);
+		String text = "";
+		if (group.getGraduationYear() != null && group.getGraduationYear().equals("") == false)
+			text += group.getGraduationYear() + "\n";
+		if (group.getDepartment() != null && group.getDepartment().equals("") == false)
+			text += group.getDepartment() + "\n";
+		if (group.getTag() != null && group.getTag().equals("") == false)
+			text += group.getTag() + "\n";
+		if (group.getDescirption() != null && group.getDescirption().equals("") == false )
+			text += group.getDescirption() + "\n";
+		TextView textView = (TextView) convertView;
+		textView.setText(text);
+		return textView;
+	}
+
+	@Override
+	public int getChildrenCount(int groupPosition)
+	{
+		return 1;
+	}
+	
+
+	@Override
+	public Object getGroup(int groupPosition)
+	{
+		return null;
+	}
+
+	@Override
+	public int getGroupCount()
+	{
+		return listener.getAllGroupsCount();
+	}
+
+	@Override
+	public long getGroupId(int groupPosition)
+	{
+		return 0;
+	}
+
+	@Override
+	public View getGroupView(final int index, boolean isExpanded, View convertView, ViewGroup parent)
 	{
 		// check if we need to inflate
 		if (convertView == null)
@@ -111,6 +156,18 @@ public class AllGroupsListAdapter extends BaseAdapter
 		}
 
 		return convertView;
+	}
+
+	@Override
+	public boolean hasStableIds()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isChildSelectable(int groupPosition, int childPosition)
+	{
+		return false;
 	}
 
 }

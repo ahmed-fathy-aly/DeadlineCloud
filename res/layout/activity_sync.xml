@@ -47,9 +47,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:background="@drawable/round_button_selector"
+        android:onClick="onSearchButtonClicked"
         android:text="Search"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:onClick = "onSearchButtonClicked" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <View
         android:layout_width="match_parent"
@@ -63,14 +63,16 @@
         android:layout_weight="2"
         android:orientation="vertical" >
 
-        <ListView
+        <ExpandableListView
             android:id="@+id/listViewAllGroups"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:choiceMode="singleChoice"
+            android:groupIndicator="@null"
+            android:overScrollMode="always"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin" >
-        </ListView>
+        </ExpandableListView>
     </LinearLayout>
 
 </LinearLayout>

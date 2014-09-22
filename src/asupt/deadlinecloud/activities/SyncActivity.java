@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import asupt.deadlinecloud.adapters.AllGroupsListAdapter;
 import asupt.deadlinecloud.adapters.AllGroupsListAdapter.AllGroupsListListener;
@@ -38,7 +39,7 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 	/* stuff about all groups groups */
 	private ArrayList<Group> allgroups;
 	private AllGroupsListAdapter allGroupsListAdapter;
-	private ListView allGroupsListView;
+	private ExpandableListView allGroupsListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -196,7 +197,7 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 
 		// set the adapter
 		allGroupsListAdapter = new AllGroupsListAdapter(SyncActivity.this, SyncActivity.this);
-		allGroupsListView = (ListView) findViewById(R.id.listViewAllGroups);
+		allGroupsListView = (ExpandableListView) findViewById(R.id.listViewAllGroups);
 		allGroupsListView.setAdapter(allGroupsListAdapter);
 	}
 
