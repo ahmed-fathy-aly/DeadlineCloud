@@ -6,37 +6,47 @@
 
     <uses-sdk
         android:minSdkVersion="10"
-        android:targetSdkVersion="18" />    
+        android:targetSdkVersion="18" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-	<uses-permission android:name="android.permission.WRITE_CALENDAR"/>
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-
-<permission android:name="asuspt.deadlinecloud.permission.C2D_MESSAGE"
+    <permission
+        android:name="asuspt.deadlinecloud.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-<uses-permission android:name="asuspt.deadlinecloud.permission.C2D_MESSAGE" />
-   
-<application
+
+    <uses-permission android:name="asuspt.deadlinecloud.permission.C2D_MESSAGE" />
+    
+    <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <meta-data android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
         
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <receiver
             android:name="asupt.deadlinecloud.web.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="asuspt.deadlinecloud" />
             </intent-filter>
         </receiver>
+        <receiver android:name="asupt.deadlinecloud.data.NewDeadlineBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="deadline.cloud.newDeadline" /> 
+               </intent-filter>
+        </receiver>
+
         <service android:name="asupt.deadlinecloud.web.GcmIntentService" />
-        
-        
+
         <activity
             android:name="asupt.deadlinecloud.activities.HomeActivity"
             android:label="@string/app_name" >
@@ -47,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="asupt.deadlinecloud.activities.DeadlinesActivity"
+            android:name="asupt.deadlinecloud.activities.MyDeadlinesActivity"
             android:label="@string/title_activity_deadlines"
             android:parentActivityName="asupt.deadlinecloud.activities.HomeActivity" >
             <meta-data
@@ -57,7 +67,7 @@
         <activity
             android:name="asupt.deadlinecloud.activities.AddDeadlineActivity"
             android:label="Add Deadline"
-            android:parentActivityName="asupt.deadlinecloud.activities.DeadlinesActivity" >
+            android:parentActivityName="asupt.deadlinecloud.activities.MyDeadlinesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="asuspt.deadlinecloud.activities.HomeActivity" />
@@ -109,6 +119,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="asupt.deadlinecloud.activities.MyGroupsActivity" />
+        </activity>
+        <activity
+            android:name="asupt.deadlinecloud.activities.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="asupt.deadlinecloud.activities.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="asupt.deadlinecloud.activities.HomeActivity" />
         </activity>
     </application>
 

@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:background="@drawable/home_icon_selector"
             android:src="@drawable/icon_deadlines" 
-            android:onClick = "onButtonDeadlinesClicked"/>
+            android:onClick="onButtonDeadlinesClicked"/>
 
         <ImageButton
             android:layout_width="0dp"
@@ -53,7 +53,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/home_icon_selector"
-            android:src="@drawable/icon_settings" />
+            android:src="@drawable/icon_settings"
+            android:onClick="onButtonSettingsClicked" />
     </LinearLayout>
 
 </LinearLayout>

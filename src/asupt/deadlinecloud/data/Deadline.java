@@ -19,7 +19,6 @@ public class Deadline
 	}
 
 	public static final int highPriorityColor = 0;
-
 	public static String localString = "Local";
 	public static int HIGH_COLOR = 0xaaff4444;
 	public static int MID_COLOR = 0xaaffbb33;
@@ -34,6 +33,7 @@ public class Deadline
 	private long databaseId;
 	private String webId;
 	private String groupId;
+	private int inMyDeadlines;
 
 	/* Constructors */
 	public Deadline()
@@ -43,6 +43,9 @@ public class Deadline
 		this.priority = Priorirty.LOW;
 		this.groupName = "";
 		this.calendar = new GregorianCalendar();
+		this.groupId = "";
+		this.webId = "";
+		this.inMyDeadlines = 0;
 	}
 	
 	public String getGroupId() {
@@ -160,6 +163,21 @@ public class Deadline
 		this.webId = webId;
 	}
 
+	public void setGroupId(String groupId)
+	{
+		this.groupId = groupId;
+	}
+
+	public int getInMyDeadlines()
+	{
+		return inMyDeadlines;
+	}
+
+	public void setInMyDeadlines(int inMyDeadlines)
+	{
+		this.inMyDeadlines = inMyDeadlines;
+	}
+
 	/* Methods */
 	public String toString()
 	{
@@ -182,8 +200,7 @@ public class Deadline
 		Date now = nowC.getTime();
 		Date then = calendar.getTime();
 
-		Log.e("Game", "now" + now.toString());
-		Log.e("Game", "then" + then.toString());
+
 
 		long diff = then.getTime() - now.getTime();
 		int daysRem = (int) (diff / (24 * 60 * 60 * 1000));

@@ -28,7 +28,7 @@ import asuspt.deadlinecloud.R;
 import asuspt.deadlinecloud.R.layout;
 import asuspt.deadlinecloud.R.menu;
 
-public class DeadlinesActivity extends Activity implements DeadlineListListener
+public class MyDeadlinesActivity extends Activity implements DeadlineListListener
 {
 
 	private static DatabaseController database;
@@ -55,13 +55,6 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (requestCode == MyUtils.ADD_DEADLINES_REQUEST_CODE)
-		{
-			if (resultCode == RESULT_OK)
-			{
-				refreshDeadline();
-			}
-		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -76,7 +69,7 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 	{
 		// get the deadlines
 		database = new DatabaseController(this);
-		deadlines = database.getAllDeadlines();
+		deadlines = database.getMyDeadlines();
 
 		// manage the expandable list
 		listView = (ExpandableListView) findViewById(R.id.expandableList);
@@ -115,10 +108,9 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 			return true;
 		case R.id.addDeadlineButton:
 			Intent intent = new Intent(this, AddDeadlineActivity.class);
-			startActivityForResult(intent, MyUtils.ADD_DEADLINES_REQUEST_CODE);
-			return true;
-		case R.id.refreshDeadlines:
-			refreshDeadline();
+			intent.putExtra(MyUtils.INTENT_GROUP_ID, -1);
+			intent.putExtra(MyUtils.INTENT_GROUP_NAME, Deadline.localString);
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -164,67 +156,7 @@ public class DeadlinesActivity extends Activity implements DeadlineListListener
 		return this.deadlines.size();
 	}
 
-	@Override
-	public void addReminder(Reminder reminder)
-	{
-		Log.e("Game", reminder.getCalendar().toString());
-		database.addReminder(reminder);
-	}
 
-	private void refreshDeadline()
-	{
-		// get the deadlines from the server and add them
-		new AsyncTask<Boolean, Boolean, Boolean>()
-		{
-			ProgressDialog progressDialog;
 
-			@Override
-			protected void onPreExecute()
-			{
-				progressDialog = ProgressDialog.show(DeadlinesActivity.this, "Downloading",
-						"Downloading deadlines...");
-			}
 
-			@Override
-			protected Boolean doInBackground(Boolean... params)
-			{
-				// Add the local deadlines
-				ArrayList<Deadline> newDeadlines = new ArrayList<Deadline>();
-				for (Deadline deadline : database.getAllDeadlines())
-					if (deadline.getGroupName().equals(Deadline.localString))
-						newDeadlines.add(deadline);
-
-				// add all other deadlines
-				for (Group group : database.getAllGroups())
-				{
-					ArrayList<Deadline> groupDeadlines = WebMinion.getAllDeadlines(group.getId());
-					for (Deadline deadline : groupDeadlines)
-						newDeadlines.add(deadline);
-				}
-
-				// remove all the deadlines in the database
-				for (Deadline deadline : database.getAllDeadlines())
-					database.deleteDeadline(deadline);
-
-				// add the new deadlines
-				deadlines.clear();
-				for (Deadline deadline : newDeadlines)
-				{
-					database.addDedaline(deadline);
-					deadlines.add(deadline);
-				}
-
-				return true;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result)
-			{
-				// dissmiss
-				progressDialog.dismiss();
-				listAdapter.notifyDataSetChanged();
-			}
-
-		}.execute(true);
-	}
 }

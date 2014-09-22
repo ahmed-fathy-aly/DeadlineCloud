@@ -160,6 +160,17 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 		return super.onContextItemSelected(item);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (resultCode == RESULT_OK && requestCode == MyUtils.ADD_GROUP_REQUEST_CODE)
+		{
+			myGroups = database.getAllGroups();
+			myGroupsGridAdapter.notifyDataSetChanged();
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
 	/* groups stuff */
 	private void setMyGroupsList()
 	{
@@ -211,7 +222,6 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 	}
 
 	/* option items */
-
 	private void onAddNewGroupButtonClicked()
 	{
 		// make a dialog from which the user chooses his account

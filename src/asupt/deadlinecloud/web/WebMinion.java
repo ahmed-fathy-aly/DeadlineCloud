@@ -36,21 +36,21 @@ public class WebMinion
 	static HttpClient client = new DefaultHttpClient();
 	final static String initUrl = "http://mydeadlinecloud.herokuapp.com/";
 	final static String NOT_ADMIN_ERROR = "Only admins can do that";
-	
-	public static Boolean isConnected()
+	final static String TRUE_STRING = "true";
+	public static Boolean isConnected(Context context)
 	{
+		if (true)
+			return true;
+
 		// TODO: Do something to get a context here.
-		Context context = null;
-		ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		 
+		ConnectivityManager cm = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		Boolean connected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-		if (!connected) {
-			// TODO: Not connected to the internet. Do something.
-		}
 		return connected;
 	}
-	
+
 	/**
 	 * Sends the registration ID to your server over HTTP, so it can use
 	 * GCM/HTTP or CCS to send messages to your app. Not needed for this demo
@@ -59,11 +59,7 @@ public class WebMinion
 	 */
 	public static Boolean sendRegistrationId(String regId, String gmailId)
 	{
-		
-		if (!isConnected()) {
-			return false;
-		}
-		
+
 		Log.i("STH", "SDH6");
 		HttpPost httppost = new HttpPost(initUrl + "users.json");
 		Log.i("STH", "SDH7");
@@ -113,16 +109,11 @@ public class WebMinion
 	 * @add a new group. Note that when a user adds a group, he doesn't get
 	 *      subscribed to it.
 	 */
-	public static boolean addGroup(String groupName, String gmailId, String graduationYear,
+	public static String addGroup(String groupName, String gmailId, String graduationYear,
 			String department, String tag, String description, Boolean is_public)
 	{
-		
-		if (!isConnected()) {
-			return false;
-		}
-		
-		HttpPost httppost = new HttpPost(initUrl + "groups.json");
 
+		HttpPost httppost = new HttpPost(initUrl + "groups.json");
 		try
 		{
 			// Add your data
@@ -130,26 +121,33 @@ public class WebMinion
 			nameValuePairs.add(new BasicNameValuePair("group[name]", groupName));
 			nameValuePairs.add(new BasicNameValuePair("group[owner]", gmailId));
 			nameValuePairs.add(new BasicNameValuePair("group[description]", description));
-			nameValuePairs.add(new BasicNameValuePair("public_group", is_public? "true":"false"));
+			nameValuePairs
+					.add(new BasicNameValuePair("public_group", is_public ? "true" : "false"));
 			nameValuePairs.add(new BasicNameValuePair("graduation_year", graduationYear));
 			nameValuePairs.add(new BasicNameValuePair("department", department));
 			nameValuePairs.add(new BasicNameValuePair("tag", tag));
-
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			// Execute HTTP Post Request
 			HttpResponse response = client.execute(httppost);
-			if (response.getStatusLine().getStatusCode() == 422) {
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			Log.i("RESPONSE", response_str);
+			JSONObject res = new JSONObject(response_str);
+			if (response.getStatusLine().getStatusCode() == 422)
+			{
 				// TODO: Group name already taken.
 			}
-			return (response.getStatusLine().getStatusCode() == 201);
+			if (response.getStatusLine().getStatusCode() == 201)
+			{
+				return res.getString("id");
+			}
 
 		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
-
-		return false;
+		return "";
 	}
 
 	/**
@@ -163,10 +161,7 @@ public class WebMinion
 	{
 
 		ArrayList<Group> groups = new ArrayList<Group>();
-		if (!isConnected()) {
-			return groups;
-		}
-		
+
 		String finalUrl = initUrl + "groups.json?";
 		if (graduationYear != MyUtils.TAG_ANY)
 			finalUrl += "&graduation_year=" + graduationYear;
@@ -221,10 +216,6 @@ public class WebMinion
 	public static Boolean subscribe(String groupId, String gmailId)
 	{
 
-		if (!isConnected()) {
-			return false;
-		}
-		
 		HttpPost httppost = new HttpPost(initUrl + "groups/" + groupId + "/users.json");
 
 		try
@@ -239,26 +230,22 @@ public class WebMinion
 			HttpEntity resEntity = response.getEntity();
 			final String response_str = EntityUtils.toString(resEntity);
 			Log.e("RESPONSE", response_str);
-			return (response.getStatusLine().getStatusCode() == 201); 
+			return (response.getStatusLine().getStatusCode() == 201);
 		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
-		
+
 		return false;
-		
+
 	}
 
 	/**
 	 * asks the server to add a deadline to a certain group
 	 */
-	public static Boolean postDeadline(String groupId, String gmailId, Deadline deadline)
+	public static String postDeadline(String groupId, String gmailId, Deadline deadline)
 	{
 
-		if (!isConnected()) {
-			return false;
-		}
-		
 		HttpPost httppost = new HttpPost(initUrl + "groups/" + groupId + "/deadlines.json");
 
 		try
@@ -271,7 +258,8 @@ public class WebMinion
 					.getDescription()));
 			nameValuePairs.add(new BasicNameValuePair("deadline[priority]", String.valueOf(deadline
 					.getWebPriority())));
-			// TODO: You might want to make sure he can't pick a date earlier than today. Not my part though.
+			// TODO: You might want to make sure he can't pick a date earlier
+			// than today. Not my part though.
 			Calendar t = deadline.getCalendar();
 			t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
 			Log.i("asasdfad", String.valueOf(t.getTimeInMillis()));
@@ -287,16 +275,21 @@ public class WebMinion
 			Log.i("RESPONSE", response_str);
 			JSONObject res = new JSONObject(response_str);
 			String error = res.getString("error");
-			if (error.equals(NOT_ADMIN_ERROR)) {
-				//TODO: A non Admin is trying to add a deadline to a non public group.
+			if (error.equals(NOT_ADMIN_ERROR))
+			{
+				// TODO: A non Admin is trying to add a deadline to a non public
+				// group.
 			}
-			return (response.getStatusLine().getStatusCode() == 201);
+			if (response.getStatusLine().getStatusCode() == 201)
+			{
+				return res.getString("id");
+			}
 
 		} catch (Exception ex)
 		{
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
-		return false;
+		return "error";
 	}
 
 	/**
@@ -306,10 +299,6 @@ public class WebMinion
 	{
 
 		ArrayList<Deadline> deadlines = new ArrayList<Deadline>();
-		if (!isConnected()) {
-			return deadlines;
-		}
-		
 		HttpGet httpget = new HttpGet(initUrl + "groups/" + groupId + "/deadlines.json");
 
 		try
@@ -343,9 +332,7 @@ public class WebMinion
 	public static ArrayList<String> getGraduationYears()
 	{
 		ArrayList<String> result = new ArrayList<String>();
-		if (!isConnected()) {
-			return result;
-		}
+
 		HttpGet httpget = new HttpGet(initUrl + "graduation_years.json");
 		try
 		{
@@ -379,11 +366,9 @@ public class WebMinion
 	public static ArrayList<String> getDeaprtments()
 	{
 		ArrayList<String> result = new ArrayList<String>();
-		if (!isConnected()) {
-			return result;
-		}
+
 		HttpGet httpget = new HttpGet(initUrl + "departments.json");
-		
+
 		try
 		{
 			HttpResponse response = client.execute(httpget);
@@ -416,9 +401,7 @@ public class WebMinion
 	public static ArrayList<String> getTags()
 	{
 		ArrayList<String> result = new ArrayList<String>();
-		if (!isConnected()) {
-			return result;
-		}
+
 		HttpGet httpget = new HttpGet(initUrl + "tags.json");
 
 		try
@@ -449,11 +432,7 @@ public class WebMinion
 
 	public static Boolean addAdmin(String groupId, String gmailAddress, String newAdminMail)
 	{
-		
-		if (!isConnected()) {
-			return false;
-		}
-		
+
 		HttpPost httppost = new HttpPost(initUrl + "groups/" + groupId + "/admins.json");
 
 		try
@@ -471,8 +450,9 @@ public class WebMinion
 			Log.i("RESPONSE", response_str);
 			JSONObject res = new JSONObject(response_str);
 			String error = res.getString("error");
-			if (error.equals(NOT_ADMIN_ERROR)) {
-				//TODO: A non Admin is trying to add an admin.
+			if (error.equals(NOT_ADMIN_ERROR))
+			{
+				// TODO: A non Admin is trying to add an admin.
 			}
 			return (response.getStatusLine().getStatusCode() == 201);
 
@@ -490,8 +470,9 @@ public class WebMinion
 	public static boolean deleteDeadline(Deadline deadline, String gmailAddress, String groupId,
 			String groupName)
 	{
-		HttpDelete httpdelete = new HttpDelete(initUrl + "group/" + groupId + "/deadlines/" + deadline.getWebId() + ".json?phone_id=" + gmailAddress);
-		
+		HttpDelete httpdelete = new HttpDelete(initUrl + "groups/" + groupId + "/deadlines/"
+				+ deadline.getWebId() + ".json?phone_id=" + gmailAddress);
+
 		try
 		{
 			// Execute HTTP Delete Request
@@ -501,8 +482,9 @@ public class WebMinion
 			Log.i("RESPONSE", response_str);
 			JSONObject res = new JSONObject(response_str);
 			String error = res.getString("error");
-			if (error.equals(NOT_ADMIN_ERROR)) {
-				//TODO: A non Admin is trying to delete a deadline.
+			if (error.equals(NOT_ADMIN_ERROR))
+			{
+				// TODO: A non Admin is trying to delete a deadline.
 			}
 			return (response.getStatusLine().getStatusCode() == 201);
 		} catch (Exception ex)
@@ -512,4 +494,29 @@ public class WebMinion
 		return false;
 	}
 
+	/**
+	 * @returns true if the user can manage the group, false otherwise.
+	 */
+	public static boolean canManageGroup(String groupId, String gmailId)
+	{
+
+		HttpGet httpget = new HttpGet(initUrl + "groups/" + groupId + "permissions.json?phone_id="
+				+ gmailId);
+
+		try
+		{
+			HttpResponse response = client.execute(httpget);
+			HttpEntity resEntity = response.getEntity();
+			final String response_str = EntityUtils.toString(resEntity);
+			if (response.getStatusLine().getStatusCode() == 201)
+			{
+				JSONObject res = new JSONObject(response_str);
+				return res.getString("able").equals(TRUE_STRING);
+			}
+		} catch (Exception ex)
+		{
+			Log.e("Debug", "error: " + ex.getMessage(), ex);
+		}
+		return false;
+	}
 }

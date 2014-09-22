@@ -16,7 +16,7 @@ public class DatabaseController extends SQLiteOpenHelper
 {
 	/* Data base constants */
 	private static final String DATABASE_NAME = "asuptDeadlineCloudDatabase";
-	private static final int DATABASE_VERSION = 13;
+	private static final int DATABASE_VERSION = 17;
 
 	/* Deadline table */
 	private static final String DEADLINES_TABLE_NAME = "deadlinesTable";
@@ -28,6 +28,9 @@ public class DatabaseController extends SQLiteOpenHelper
 	private static final String KEY_MONTH = "deadlineMonth";
 	private static final String KEY_YEAR = "deadlineYear";
 	private static final String KEY_PRIORITY = "deadlinePriority";
+	private static final String KEY_DEADLINE_GROUP_ID = "deadlineGroupId";
+	private static final String KEY_DEADLINE_WEB_ID = "deadlineWebId";
+	private static final String KEY_DEADLINE_IN_MY_DEADLINES = "deadlineInMYDeadlines";
 
 	/* Groups Table */
 	private static final String GROUPS_TABLE_NAME = "groupsTable";
@@ -48,9 +51,11 @@ public class DatabaseController extends SQLiteOpenHelper
 	{
 		String CREATE_DEADLINES_TABLE = "CREATE TABLE IF NOT EXISTS " + DEADLINES_TABLE_NAME + "("
 				+ KEY_DEADLINE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-				+ KEY_DEADLINE_TITLE + " TEXT," + KEY_DEADLINE_GROUP + " TEXT,"
-				+ KEY_DEADLINE_DESCRIPTION + " TEXT," + KEY_PRIORITY + " TEXT," + KEY_YEAR
-				+ " TEXT," + KEY_MONTH + " TEXT," + KEY_DAY + " TEXT" + ")";
+				+ KEY_DEADLINE_IN_MY_DEADLINES + " Integer," + KEY_DEADLINE_WEB_ID + " TEXT,"
+				+ KEY_DEADLINE_GROUP_ID + " TEXT," + KEY_DEADLINE_TITLE + " TEXT,"
+				+ KEY_DEADLINE_GROUP + " TEXT," + KEY_DEADLINE_DESCRIPTION + " TEXT,"
+				+ KEY_PRIORITY + " TEXT," + KEY_YEAR + " TEXT," + KEY_MONTH + " TEXT," + KEY_DAY
+				+ " TEXT" + ")";
 
 		String CREATE_GROUPS_TABLE = "CREATE TABLE IF NOT EXISTS " + GROUPS_TABLE_NAME + "("
 				+ KEY_Group_DATABASE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
@@ -92,6 +97,10 @@ public class DatabaseController extends SQLiteOpenHelper
 				deadline.setDescription(cursor.getString(cursor
 						.getColumnIndex(KEY_DEADLINE_DESCRIPTION)));
 				deadline.setGroupName(cursor.getString(cursor.getColumnIndex(KEY_DEADLINE_GROUP)));
+				deadline.setWebId(cursor.getString(cursor.getColumnIndex(KEY_DEADLINE_WEB_ID)));
+				deadline.setGroupId(cursor.getString(cursor.getColumnIndex(KEY_DEADLINE_GROUP_ID)));
+				deadline.setInMyDeadlines(cursor.getInt(cursor
+						.getColumnIndex(KEY_DEADLINE_IN_MY_DEADLINES)));
 
 				String year, month, day;
 				year = cursor.getString(cursor.getColumnIndex(KEY_YEAR));
@@ -126,10 +135,14 @@ public class DatabaseController extends SQLiteOpenHelper
 		ContentValues entry = new ContentValues();
 		entry.put(KEY_DEADLINE_TITLE, deadline.getTitle());
 		entry.put(KEY_DEADLINE_GROUP, deadline.getGroupName());
+		entry.put(KEY_DEADLINE_IN_MY_DEADLINES, deadline.getInMyDeadlines());
 		entry.put(KEY_DEADLINE_DESCRIPTION, deadline.getDescription());
 		entry.put(KEY_PRIORITY, "" + deadline.getWebPriority());
 		entry.put(KEY_YEAR, "" + deadline.getCalendar().get(Calendar.YEAR));
 		entry.put(KEY_MONTH, "" + deadline.getCalendar().get(Calendar.MONTH));
+		entry.put(KEY_DAY, "" + deadline.getCalendar().get(Calendar.DAY_OF_MONTH));
+		entry.put(KEY_DEADLINE_GROUP_ID, deadline.getGroupId());
+		entry.put(KEY_DEADLINE_WEB_ID, deadline.getWebId());
 		entry.put(KEY_DAY, "" + deadline.getCalendar().get(Calendar.DAY_OF_MONTH));
 
 		// insert and wrap it up
@@ -147,13 +160,49 @@ public class DatabaseController extends SQLiteOpenHelper
 	public ArrayList<Deadline> getGroupDeadlines(String groupName)
 	{
 		ArrayList<Deadline> result = new ArrayList<Deadline>();
-		
+
 		ArrayList<Deadline> allDeadlines = getAllDeadlines();
-		for (Deadline deadline : allDeadlines) 
+		for (Deadline deadline : allDeadlines)
 			if (deadline.getGroupName().equals(groupName))
 				result.add(deadline);
-			
+
 		return result;
+	}
+
+	public ArrayList<Deadline> getMyDeadlines()
+	{
+		// filter the deadlines which are marked as my deadlines
+		ArrayList<Deadline> result = new ArrayList<Deadline>();
+
+		for (Deadline deadline : getAllDeadlines())
+			if (deadline.getInMyDeadlines() == 1)
+				result.add(deadline);
+
+		return result;
+	}
+
+	public void addToMyDeadlines(Deadline deadline)
+	{
+		ContentValues entry = new ContentValues();
+		entry.put(KEY_DEADLINE_IN_MY_DEADLINES, 1);
+		getWritableDatabase().update(DEADLINES_TABLE_NAME, entry,
+				KEY_DEADLINE_ID + "=" + deadline.getDatabaseId(), null);
+	}
+
+	public void addToMyDeadlines(String deadlineWebId)
+	{
+
+		// find the deadline
+		Deadline newDeadline = null;
+		ArrayList<Deadline> allDeadlines = getAllDeadlines();
+
+		for (Deadline deadline : allDeadlines)
+			if (deadline.getWebId() != null && deadline.getWebId().equals(deadlineWebId))
+				newDeadline = deadline;
+
+		if (newDeadline != null)
+			addToMyDeadlines(newDeadline);
+
 	}
 
 	/* Reminders */
@@ -224,8 +273,5 @@ public class DatabaseController extends SQLiteOpenHelper
 		getWritableDatabase().delete(GROUPS_TABLE_NAME,
 				KEY_Group_DATABASE_ID + "=" + group.getDatabaseId(), null);
 	}
-
-	
-
 
 }

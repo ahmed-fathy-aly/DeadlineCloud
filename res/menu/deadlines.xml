@@ -12,12 +12,6 @@
         android:showAsAction="ifRoom|withText"
         android:title="Add"
         android:titleCondensed="Add"/>
-    <item
-        android:id="@+id/refreshDeadlines"
-        android:icon="@drawable/ic_menu_refresh"
-        android:orderInCategory="2"
-        android:showAsAction="ifRoom|withText"
-        android:title="Refresh"
-        android:titleCondensed="Refresh"/>
+
 
 </menu>

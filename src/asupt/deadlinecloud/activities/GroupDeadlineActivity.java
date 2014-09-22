@@ -2,6 +2,9 @@ package asupt.deadlinecloud.activities;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -16,6 +19,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
@@ -135,15 +139,14 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 
 		if (v.getId() == R.id.expandableListMyGroupDeadlinesList)
 		{
-			Log.e("Game", menuInfo.getClass() + " ");
 			ExpandableListView.ExpandableListContextMenuInfo acmi = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
+			int idx = ExpandableListView.getPackedPositionGroup(acmi.packedPosition);
 			menu.setHeaderTitle(deadlines.get(
 					ExpandableListView.getPackedPositionGroup(acmi.packedPosition)).getTitle());
-			menu.add(0, v.getId(), 0, "Add to my deadlines");
+			if (deadlines.get(idx).getInMyDeadlines() == 0)
+				menu.add(0, v.getId(), 0, "Add to my deadlines");
 			menu.add(0, v.getId(), 0, "Add to Calendar");
-			menu.add(0, v.getId(), 0, "Add Reminder");
 			menu.add(0, v.getId(), 0, "Delete");
-			
 
 		}
 	}
@@ -158,18 +161,15 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		if (item.getTitle().equals("Add to Calendar"))
 		{
 			addCalendar(deadlines.get(idx));
-		} else if (item.getTitle().equals("Add Reminder"))
-		{
-			addReminder(deadlines.get(idx));
-		}
-		else if (item.getTitle().equals("Delete"))
+		} else if (item.getTitle().equals("Delete"))
 		{
 			deleteDeadline(deadlines.get(idx));
+		} else if (item.getTitle().equals("Add to my deadlines"))
+		{
+			addToMyDeadlines(deadlines.get(idx));
 		}
 		return super.onContextItemSelected(item);
 	}
-
-
 
 	/* stuff about the deadline list */
 	private void setDeadlinesList()
@@ -177,6 +177,7 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		// get the deadlines
 		database = new DatabaseController(this);
 		deadlines = database.getGroupDeadlines(groupName);
+		sortDeadlines();
 
 		// manage the expandable list
 		listView = (ExpandableListView) findViewById(R.id.expandableListMyGroupDeadlinesList);
@@ -187,7 +188,41 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		registerForContextMenu(listView);
 	}
 
-	@Override
+	private void sortDeadlines()
+	{
+		final String sortCriteria = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				"sort_criteria", "1");
+		Collections.sort(deadlines, new Comparator<Deadline>()
+		{
+			public int compare(Deadline d1, Deadline d2)
+			{
+				int cmp1 = d2.getWebId().compareTo(d1.getWebId());
+				int cmp2 = d1.getCalendar().compareTo(d2.getCalendar());
+				Integer d1w = d1.getWebPriority();
+				Integer d2w = d2.getWebPriority();
+				int cmp3 = d2w.compareTo(d1w);
+
+				if (sortCriteria.equals("1"))
+				{
+					return cmp1;
+				} else if (sortCriteria.equals("2"))
+				{
+					if (cmp2 != 0)
+						return cmp2;
+					else
+						return cmp3;
+				} else
+				{
+					if (cmp3 != 0)
+						return cmp3;
+					else
+						return cmp2;
+				}
+			}
+		});
+
+	}
+
 	public void removeDeadline(int idx)
 	{
 		deadlines.remove(idx);
@@ -241,6 +276,7 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 					database.addDedaline(deadline);
 					deadlines.add(deadline);
 				}
+				sortDeadlines();
 
 				return true;
 			}
@@ -306,69 +342,70 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		intent.setType("vnd.android.cursor.item/event");
 		intent.putExtra("title", deadline.getTitle());
 		intent.putExtra("description", deadline.getDescription());
-		intent.putExtra("beginTime", deadline.getCalendar().getTimeInMillis());
-		intent.putExtra("endTime", deadline.getCalendar().getTimeInMillis() + 3600000);
+		Calendar calendar = (Calendar) deadline.getCalendar().clone();
+		calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 1900);
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
+		intent.putExtra("beginTime", calendar.getTimeInMillis());
+		intent.putExtra("endTime", calendar.getTimeInMillis() + 3600000);
 		startActivity(intent);
-	}
-
-	private void addReminder(Deadline deadline)
-	{
-
 	}
 
 	private void deleteDeadline(final Deadline deadline)
 	{
 		// take the dude's mail and ask the server to delete
 		// make a dialog from which the user chooses his account
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle("Choose you gmail-account");
-			
-				// cancel button
-				builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int whichButton)
-					{
-						dialog.dismiss();
-					}
-				});
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Choose you gmail-account");
 
-				// list of accounts
-				final ArrayList<String> gUsernameList = MyUtils.getGmailAccounts(this);
-				ListView lv = new ListView(this);
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-						android.R.layout.simple_list_item_1, android.R.id.text1, gUsernameList);
-				lv.setAdapter(adapter);
-				builder.setView(lv);
-				
-				// on click 
-				final Dialog dialog = builder.create();
-				lv.setOnItemClickListener(new OnItemClickListener()
-				{
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-					{
-						// when one of them clicked delete that deadline
-						String gmailAddress = gUsernameList.get(position);
-						confirmDeleteDeadline(deadline, gmailAddress);
-						dialog.dismiss();
-					}
+		// cancel button
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int whichButton)
+			{
+				dialog.dismiss();
+			}
+		});
 
+		// list of accounts
+		final ArrayList<String> gUsernameList = MyUtils.getGmailAccounts(this);
+		ListView lv = new ListView(this);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, android.R.id.text1, gUsernameList);
+		lv.setAdapter(adapter);
+		builder.setView(lv);
 
-				});
+		// on click
+		final Dialog dialog = builder.create();
+		lv.setOnItemClickListener(new OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				// when one of them clicked delete that deadline
+				String gmailAddress = gUsernameList.get(position);
+				confirmDeleteDeadline(deadline, gmailAddress);
+				dialog.dismiss();
+			}
 
+		});
 
-				dialog.show();
-		
+		dialog.show();
+
 	}
+
 	void confirmDeleteDeadline(final Deadline deadline, final String gmailAddress)
 	{
 		// make a thread that asks the web minion to delete the deadline
-		new AsyncTask<Boolean, Boolean, Boolean>(){
+		new AsyncTask<Boolean, Boolean, Boolean>()
+		{
 			ProgressDialog progressDialog;
+
 			@Override
 			protected void onPreExecute()
 			{
-				progressDialog = ProgressDialog.show(GroupDeadlineActivity.this, "Deleting", "Deleting deadline...");
+				progressDialog = ProgressDialog.show(GroupDeadlineActivity.this, "Deleting",
+						"Deleting deadline...");
 			}
+
 			@Override
 			protected Boolean doInBackground(Boolean... params)
 			{
@@ -380,15 +417,19 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 			{
 				progressDialog.dismiss();
 				if (result == false)
-					Toast.makeText(GroupDeadlineActivity.this, "Couldn't delete", Toast.LENGTH_SHORT);
+					Toast.makeText(GroupDeadlineActivity.this, "Couldn't delete",
+							Toast.LENGTH_SHORT).show();
 				else
 					refreshDeadlines();
 			}
 
-
-		
 		}.execute(true);
-		}
-		
-	
+	}
+
+	private void addToMyDeadlines(Deadline deadline)
+	{
+		database.addToMyDeadlines(deadline);
+		deadline.setInMyDeadlines(1);
+	}
+
 }

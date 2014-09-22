@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="notifications" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notifications_new_deadline"
+            android:title="New Deadline notifications" />
+
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="notifications_new_deadline"
+            android:key="notifications_new_deadline_ringtone"
+            android:ringtoneType="notification"
+            android:title="Ringtone" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notifications_new_deadline"
+            android:key="notifications_new_deadlines_vibrate"
+            android:title="vibrate" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="View" >
+        <ListPreference android:title="Sort deadlines by"
+            android:key="sort_criteria" 
+            android:entries="@array/sortCriteria"
+            android:entryValues="@array/sortCriteriaValues"
+            android:defaultValue="1"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

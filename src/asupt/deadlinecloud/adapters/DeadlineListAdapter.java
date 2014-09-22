@@ -1,6 +1,7 @@
 package asupt.deadlinecloud.adapters;
 
 import java.util.Calendar;
+import java.util.Collections;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import asupt.deadlinecloud.data.Deadline;
 import asupt.deadlinecloud.data.Reminder;
+import asupt.deadlinecloud.utils.MyUtils;
 import asuspt.deadlinecloud.R;
 
 public class DeadlineListAdapter extends BaseExpandableListAdapter
@@ -26,8 +28,7 @@ public class DeadlineListAdapter extends BaseExpandableListAdapter
 
 		int getDeadlinesCount();
 
-		void addReminder(Reminder reminder);
-	}
+			}
 
 	/* member variables */
 	private Context context;

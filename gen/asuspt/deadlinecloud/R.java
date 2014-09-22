@@ -12,6 +12,14 @@ public final class R {
         public static final int slide_from_upper_right=0x7f040000;
         public static final int slide_to_lower_leftt=0x7f040001;
     }
+    public static final class array {
+        public static final int pref_example_list_titles=0x7f0b0002;
+        public static final int pref_example_list_values=0x7f0b0003;
+        public static final int pref_sync_frequency_titles=0x7f0b0004;
+        public static final int pref_sync_frequency_values=0x7f0b0005;
+        public static final int sortCriteria=0x7f0b0000;
+        public static final int sortCriteriaValues=0x7f0b0001;
+    }
     public static final class attr {
         /** 
     The size of the ad. It must be one of BANNER, FULL_BANNER, LEADERBOARD,
@@ -168,20 +176,20 @@ containing a value of this type.
         public static final int zOrderOnTop=0x7f010010;
     }
     public static final class color {
-        public static final int common_action_bar_splitter=0x7f050009;
+        public static final int common_action_bar_splitter=0x7f060009;
         /**  Sign-in Button Colors 
          */
-        public static final int common_signin_btn_dark_text_default=0x7f050000;
-        public static final int common_signin_btn_dark_text_disabled=0x7f050002;
-        public static final int common_signin_btn_dark_text_focused=0x7f050003;
-        public static final int common_signin_btn_dark_text_pressed=0x7f050001;
-        public static final int common_signin_btn_default_background=0x7f050008;
-        public static final int common_signin_btn_light_text_default=0x7f050004;
-        public static final int common_signin_btn_light_text_disabled=0x7f050006;
-        public static final int common_signin_btn_light_text_focused=0x7f050007;
-        public static final int common_signin_btn_light_text_pressed=0x7f050005;
-        public static final int common_signin_btn_text_dark=0x7f05000a;
-        public static final int common_signin_btn_text_light=0x7f05000b;
+        public static final int common_signin_btn_dark_text_default=0x7f060000;
+        public static final int common_signin_btn_dark_text_disabled=0x7f060002;
+        public static final int common_signin_btn_dark_text_focused=0x7f060003;
+        public static final int common_signin_btn_dark_text_pressed=0x7f060001;
+        public static final int common_signin_btn_default_background=0x7f060008;
+        public static final int common_signin_btn_light_text_default=0x7f060004;
+        public static final int common_signin_btn_light_text_disabled=0x7f060006;
+        public static final int common_signin_btn_light_text_focused=0x7f060007;
+        public static final int common_signin_btn_light_text_pressed=0x7f060005;
+        public static final int common_signin_btn_text_dark=0x7f06000a;
+        public static final int common_signin_btn_text_light=0x7f06000b;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -190,8 +198,8 @@ containing a value of this type.
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f090000;
-        public static final int activity_vertical_margin=0x7f090001;
+        public static final int activity_horizontal_margin=0x7f0a0000;
+        public static final int activity_vertical_margin=0x7f0a0001;
     }
     public static final class drawable {
         public static final int add_deadline_background=0x7f020000;
@@ -227,102 +235,102 @@ containing a value of this type.
         public static final int deadline_background_selector=0x7f02001e;
         public static final int deadline_background_transition=0x7f02001f;
         public static final int deadline_child_background=0x7f020020;
-        public static final int group_list_item_clicked=0x7f020021;
-        public static final int group_list_item_normal=0x7f020022;
-        public static final int group_list_item_selector=0x7f020023;
-        public static final int home_icon_background_clicked=0x7f020024;
-        public static final int home_icon_background_normal=0x7f020025;
-        public static final int home_icon_selector=0x7f020026;
-        public static final int ic_checkmark_holo_light=0x7f020027;
-        public static final int ic_launcher=0x7f020028;
-        public static final int ic_menu_my_calendar=0x7f020029;
-        public static final int ic_menu_refresh=0x7f02002a;
-        public static final int ic_plusone_medium_off_client=0x7f02002b;
-        public static final int ic_plusone_small_off_client=0x7f02002c;
-        public static final int ic_plusone_standard_off_client=0x7f02002d;
-        public static final int ic_plusone_tall_off_client=0x7f02002e;
-        public static final int icon_deadlines=0x7f02002f;
-        public static final int icon_my_groups=0x7f020030;
-        public static final int icon_reminders=0x7f020031;
-        public static final int icon_settings=0x7f020032;
-        public static final int icon_sync=0x7f020033;
-        public static final int round_button_background_clicked=0x7f020034;
-        public static final int round_button_background_normal=0x7f020035;
-        public static final int round_button_selector=0x7f020036;
-        public static final int transp_icon_background_clicked=0x7f020037;
-        public static final int transp_icon_background_normal=0x7f020038;
-        public static final int transp_icon_selector=0x7f020039;
+        public static final int dropdown_ic_arrow_normal_holo_dark=0x7f020021;
+        public static final int group_list_item_clicked=0x7f020022;
+        public static final int group_list_item_normal=0x7f020023;
+        public static final int group_list_item_selector=0x7f020024;
+        public static final int home_icon_background_clicked=0x7f020025;
+        public static final int home_icon_background_normal=0x7f020026;
+        public static final int home_icon_selector=0x7f020027;
+        public static final int ic_checkmark_holo_light=0x7f020028;
+        public static final int ic_launcher=0x7f020029;
+        public static final int ic_menu_my_calendar=0x7f02002a;
+        public static final int ic_menu_refresh=0x7f02002b;
+        public static final int ic_plusone_medium_off_client=0x7f02002c;
+        public static final int ic_plusone_small_off_client=0x7f02002d;
+        public static final int ic_plusone_standard_off_client=0x7f02002e;
+        public static final int ic_plusone_tall_off_client=0x7f02002f;
+        public static final int icon_deadlines=0x7f020030;
+        public static final int icon_my_groups=0x7f020031;
+        public static final int icon_reminders=0x7f020032;
+        public static final int icon_settings=0x7f020033;
+        public static final int icon_sync=0x7f020034;
+        public static final int round_button_background_clicked=0x7f020035;
+        public static final int round_button_background_normal=0x7f020036;
+        public static final int round_button_selector=0x7f020037;
+        public static final int transp_icon_background_clicked=0x7f020038;
+        public static final int transp_icon_background_normal=0x7f020039;
+        public static final int transp_icon_selector=0x7f02003a;
     }
     public static final class id {
-        public static final int action_settings=0x7f06003c;
-        public static final int addDeadlineButton=0x7f06003d;
-        public static final int addGroupDeadlineButton=0x7f06003f;
-        public static final int addNewGroupButton=0x7f060041;
-        public static final int autoCompleteTextViewDepartmentSearch=0x7f06001a;
-        public static final int autoCompleteTextViewGraduationYeaSearchr=0x7f060019;
-        public static final int autoCompleteTextViewTagSearch=0x7f06001b;
-        public static final int buttonAddAdmin=0x7f060007;
-        public static final int buttonAddDeadline=0x7f060008;
-        public static final int buttonAddGroup=0x7f06000e;
-        public static final int buttonDeadlineDelete=0x7f060023;
-        public static final int buttonGroupSync=0x7f060020;
-        public static final int buttonReminderAdd=0x7f060032;
-        public static final int buttonReminderCancel=0x7f060031;
-        public static final int buttonReminderDelete=0x7f06002f;
-        public static final int buttonSearchGroups=0x7f06001c;
-        public static final int datePickerDeadlineDate=0x7f06000b;
-        public static final int datePickerReminderDate=0x7f060033;
-        public static final int deadlineBackground=0x7f060024;
-        public static final int deadlinePriorityIndicator=0x7f060025;
-        public static final int editTextAdminEmailAddress=0x7f060006;
-        public static final int editTextDeadlineDescription=0x7f06000a;
-        public static final int editTextDeadlineTitle=0x7f060009;
-        public static final int editTextDepartment=0x7f060011;
-        public static final int editTextGraduationYear=0x7f060010;
-        public static final int editTextGroupDescription=0x7f060013;
-        public static final int editTextGroupTitle=0x7f06000f;
-        public static final int editTextTag=0x7f060012;
-        public static final int expandableList=0x7f060014;
-        public static final int expandableListMyGroupDeadlinesList=0x7f060015;
-        public static final int expandableListReminders=0x7f060018;
-        public static final int gridViewMyGroups=0x7f060017;
-        public static final int home_activity_button_deadlines=0x7f060016;
-        public static final int hybrid=0x7f060004;
-        public static final int imageViewSynced=0x7f060021;
-        public static final int layoutReminderButtons=0x7f060030;
-        public static final int listViewAllGroups=0x7f06001d;
-        public static final int none=0x7f060000;
-        public static final int normal=0x7f060001;
-        public static final int refreshDeadlines=0x7f06003e;
-        public static final int refreshGroupDeadlines=0x7f060040;
-        public static final int reminderBackground=0x7f060035;
-        public static final int reminderPriorityIndicator=0x7f060036;
-        public static final int satellite=0x7f060002;
-        public static final int spinnerGroup=0x7f06000d;
-        public static final int spinnerPriority=0x7f06000c;
-        public static final int terrain=0x7f060003;
-        public static final int textView1=0x7f060005;
-        public static final int textViewDeadineDescription=0x7f060022;
-        public static final int textViewDeadlineDate=0x7f060027;
-        public static final int textViewDeadlineDaysRem=0x7f060029;
-        public static final int textViewDeadlineGroup=0x7f060028;
-        public static final int textViewDeadlineTitle=0x7f060026;
-        public static final int textViewGroupName=0x7f06001e;
-        public static final int textViewMyGroupDepartment=0x7f06002c;
-        public static final int textViewMyGroupName=0x7f06002a;
-        public static final int textViewMyGroupTag=0x7f06002d;
-        public static final int textViewMyGroupYear=0x7f06002b;
-        public static final int textViewNmberOfSubscribers=0x7f06001f;
-        public static final int textViewReminderDate=0x7f060038;
-        public static final int textViewReminderDaysRem=0x7f06003a;
-        public static final int textViewReminderDescription=0x7f06002e;
-        public static final int textViewReminderGroup=0x7f060039;
-        public static final int textViewReminderNotificationDate=0x7f06003b;
-        public static final int textViewReminderTitle=0x7f060037;
-        public static final int timePickerReminderTime=0x7f060034;
+        public static final int action_settings=0x7f07003c;
+        public static final int addDeadlineButton=0x7f07003d;
+        public static final int addGroupDeadlineButton=0x7f07003e;
+        public static final int addNewGroupButton=0x7f070040;
+        public static final int autoCompleteTextViewDepartmentSearch=0x7f07001a;
+        public static final int autoCompleteTextViewGraduationYeaSearchr=0x7f070019;
+        public static final int autoCompleteTextViewTagSearch=0x7f07001b;
+        public static final int buttonAddAdmin=0x7f070007;
+        public static final int buttonAddDeadline=0x7f070008;
+        public static final int buttonAddGroup=0x7f07000e;
+        public static final int buttonDeadlineDelete=0x7f070023;
+        public static final int buttonGroupSync=0x7f070020;
+        public static final int buttonReminderAdd=0x7f070032;
+        public static final int buttonReminderCancel=0x7f070031;
+        public static final int buttonReminderDelete=0x7f07002f;
+        public static final int buttonSearchGroups=0x7f07001c;
+        public static final int datePickerDeadlineDate=0x7f07000b;
+        public static final int datePickerReminderDate=0x7f070033;
+        public static final int deadlineBackground=0x7f070024;
+        public static final int deadlinePriorityIndicator=0x7f070025;
+        public static final int editTextAdminEmailAddress=0x7f070006;
+        public static final int editTextDeadlineDescription=0x7f07000a;
+        public static final int editTextDeadlineTitle=0x7f070009;
+        public static final int editTextDepartment=0x7f070011;
+        public static final int editTextGraduationYear=0x7f070010;
+        public static final int editTextGroupDescription=0x7f070013;
+        public static final int editTextGroupTitle=0x7f07000f;
+        public static final int editTextTag=0x7f070012;
+        public static final int expandableList=0x7f070014;
+        public static final int expandableListMyGroupDeadlinesList=0x7f070015;
+        public static final int expandableListReminders=0x7f070018;
+        public static final int gridViewMyGroups=0x7f070017;
+        public static final int home_activity_button_deadlines=0x7f070016;
+        public static final int hybrid=0x7f070004;
+        public static final int imageViewSynced=0x7f070021;
+        public static final int layoutReminderButtons=0x7f070030;
+        public static final int listViewAllGroups=0x7f07001d;
+        public static final int none=0x7f070000;
+        public static final int normal=0x7f070001;
+        public static final int refreshGroupDeadlines=0x7f07003f;
+        public static final int reminderBackground=0x7f070035;
+        public static final int reminderPriorityIndicator=0x7f070036;
+        public static final int satellite=0x7f070002;
+        public static final int spinnerGroup=0x7f07000d;
+        public static final int spinnerPriority=0x7f07000c;
+        public static final int terrain=0x7f070003;
+        public static final int textView1=0x7f070005;
+        public static final int textViewDeadineDescription=0x7f070022;
+        public static final int textViewDeadlineDate=0x7f070027;
+        public static final int textViewDeadlineDaysRem=0x7f070029;
+        public static final int textViewDeadlineGroup=0x7f070028;
+        public static final int textViewDeadlineTitle=0x7f070026;
+        public static final int textViewGroupName=0x7f07001e;
+        public static final int textViewMyGroupDepartment=0x7f07002c;
+        public static final int textViewMyGroupName=0x7f07002a;
+        public static final int textViewMyGroupTag=0x7f07002d;
+        public static final int textViewMyGroupYear=0x7f07002b;
+        public static final int textViewNmberOfSubscribers=0x7f07001f;
+        public static final int textViewReminderDate=0x7f070038;
+        public static final int textViewReminderDaysRem=0x7f07003a;
+        public static final int textViewReminderDescription=0x7f07002e;
+        public static final int textViewReminderGroup=0x7f070039;
+        public static final int textViewReminderNotificationDate=0x7f07003b;
+        public static final int textViewReminderTitle=0x7f070037;
+        public static final int timePickerReminderTime=0x7f070034;
     }
     public static final class integer {
-        public static final int google_play_services_version=0x7f080000;
+        public static final int google_play_services_version=0x7f090000;
     }
     public static final class layout {
         public static final int activity_activity_admin_tools=0x7f030000;
@@ -333,132 +341,157 @@ containing a value of this type.
         public static final int activity_home=0x7f030005;
         public static final int activity_my_groups=0x7f030006;
         public static final int activity_reminders=0x7f030007;
-        public static final int activity_sync=0x7f030008;
-        public static final int all_groups_layout=0x7f030009;
-        public static final int deadline_child_layout=0x7f03000a;
-        public static final int deadline_layout=0x7f03000b;
-        public static final int my_group_layout=0x7f03000c;
-        public static final int reminder_child_layout=0x7f03000d;
-        public static final int reminder_dialog=0x7f03000e;
-        public static final int reminder_layout=0x7f03000f;
+        public static final int activity_settings=0x7f030008;
+        public static final int activity_sync=0x7f030009;
+        public static final int all_groups_layout=0x7f03000a;
+        public static final int deadline_child_layout=0x7f03000b;
+        public static final int deadline_layout=0x7f03000c;
+        public static final int my_group_layout=0x7f03000d;
+        public static final int reminder_child_layout=0x7f03000e;
+        public static final int reminder_dialog=0x7f03000f;
+        public static final int reminder_layout=0x7f030010;
     }
     public static final class menu {
-        public static final int activity_admin_tools=0x7f0b0000;
-        public static final int add_deadline=0x7f0b0001;
-        public static final int add_group=0x7f0b0002;
-        public static final int deadlines=0x7f0b0003;
-        public static final int group_deadline=0x7f0b0004;
-        public static final int home=0x7f0b0005;
-        public static final int my_groups=0x7f0b0006;
-        public static final int reminders=0x7f0b0007;
-        public static final int sync=0x7f0b0008;
+        public static final int activity_admin_tools=0x7f0d0000;
+        public static final int add_deadline=0x7f0d0001;
+        public static final int add_group=0x7f0d0002;
+        public static final int deadlines=0x7f0d0003;
+        public static final int group_deadline=0x7f0d0004;
+        public static final int home=0x7f0d0005;
+        public static final int my_groups=0x7f0d0006;
+        public static final int reminders=0x7f0d0007;
+        public static final int settings=0x7f0d0008;
+        public static final int sync=0x7f0d0009;
     }
     public static final class string {
-        public static final int action_settings=0x7f07001b;
-        public static final int app_name=0x7f07001a;
+        public static final int action_settings=0x7f08001b;
+        public static final int app_name=0x7f08001a;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
          */
-        public static final int auth_client_needs_enabling_title=0x7f070015;
+        public static final int auth_client_needs_enabling_title=0x7f080015;
         /**   Title for notification shown when GooglePlayServices needs to be
         installed for a application to work. [CHAR LIMIT=70] 
          */
-        public static final int auth_client_needs_installation_title=0x7f070016;
+        public static final int auth_client_needs_installation_title=0x7f080016;
         /**   Title for notification shown when GooglePlayServices needs to be
         udpated for a application to work. [CHAR LIMIT=70] 
          */
-        public static final int auth_client_needs_update_title=0x7f070017;
+        public static final int auth_client_needs_update_title=0x7f080017;
         /**   Title for notification shown when GooglePlayServices is unavailable [CHAR LIMIT=42] 
          */
-        public static final int auth_client_play_services_err_notification_msg=0x7f070018;
+        public static final int auth_client_play_services_err_notification_msg=0x7f080018;
         /**   Requested by string saying which app requested the notification. [CHAR LIMIT=42] 
          */
-        public static final int auth_client_requested_by_msg=0x7f070019;
+        public static final int auth_client_requested_by_msg=0x7f080019;
         /**   Title for notification shown when a bad version of GooglePlayServices
         has been installed and needs correction for an application to work.
         [CHAR LIMIT=70] 
          */
-        public static final int auth_client_using_bad_version_title=0x7f070014;
+        public static final int auth_client_using_bad_version_title=0x7f080014;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_enable_button=0x7f070006;
+        public static final int common_google_play_services_enable_button=0x7f080006;
         /**  Message in confirmation dialog informing user they need to enable
         Google Play services in application settings [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_enable_text=0x7f070005;
+        public static final int common_google_play_services_enable_text=0x7f080005;
         /**  Title of confirmation dialog informing user they need to enable
         Google Play services in application settings [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_enable_title=0x7f070004;
+        public static final int common_google_play_services_enable_title=0x7f080004;
         /**  Button in confirmation dialog for installing Google Play services [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_install_button=0x7f070003;
+        public static final int common_google_play_services_install_button=0x7f080003;
         /**  (For phones) Message in confirmation dialog informing user that
         they need to install Google Play services (from Play Store) [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_install_text_phone=0x7f070001;
+        public static final int common_google_play_services_install_text_phone=0x7f080001;
         /**  (For tablets) Message in confirmation dialog informing user that
         they need to install Google Play services (from Play Store) [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_install_text_tablet=0x7f070002;
+        public static final int common_google_play_services_install_text_tablet=0x7f080002;
         /**  Title of confirmation dialog informing user that they need to install
         Google Play services (from Play Store) [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_install_title=0x7f070000;
+        public static final int common_google_play_services_install_title=0x7f080000;
         /**  Message in confirmation dialog informing the user that they provided an invalid account. [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_invalid_account_text=0x7f07000c;
+        public static final int common_google_play_services_invalid_account_text=0x7f08000c;
         /**  Title of confirmation dialog informing the user that they provided an invalid account. [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_invalid_account_title=0x7f07000b;
+        public static final int common_google_play_services_invalid_account_title=0x7f08000b;
         /**  Message in confirmation dialog informing the user that a network error occurred. [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_network_error_text=0x7f07000a;
+        public static final int common_google_play_services_network_error_text=0x7f08000a;
         /**  Title of confirmation dialog informing the user that a network error occurred. [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_network_error_title=0x7f070009;
+        public static final int common_google_play_services_network_error_title=0x7f080009;
         /**  Message in confirmation dialog informing user there is an unknown issue in Google Play
         services [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_unknown_issue=0x7f07000d;
+        public static final int common_google_play_services_unknown_issue=0x7f08000d;
         /**  Message in confirmation dialog informing user that date on the device is not correct,
     causing certificate checks to fail. [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_unsupported_date_text=0x7f070010;
+        public static final int common_google_play_services_unsupported_date_text=0x7f080010;
         /**  Message in confirmation dialog informing user that Google Play services is not supported on their device [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_unsupported_text=0x7f07000f;
+        public static final int common_google_play_services_unsupported_text=0x7f08000f;
         /**  Title of confirmation dialog informing user that Google Play services is not supported on their device [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_unsupported_title=0x7f07000e;
+        public static final int common_google_play_services_unsupported_title=0x7f08000e;
         /**  Button in confirmation dialog for updating Google Play services [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_update_button=0x7f070011;
+        public static final int common_google_play_services_update_button=0x7f080011;
         /**  Message in confirmation dialog informing user that they need to update
         Google Play services (from Play Store) [CHAR LIMIT=NONE] 
          */
-        public static final int common_google_play_services_update_text=0x7f070008;
+        public static final int common_google_play_services_update_text=0x7f080008;
         /**  Title of confirmation dialog informing user that they need to update
         Google Play services (from Play Store) [CHAR LIMIT=40] 
          */
-        public static final int common_google_play_services_update_title=0x7f070007;
+        public static final int common_google_play_services_update_title=0x7f080007;
         /**  Sign-in button text [CHAR LIMIT=15] 
          */
-        public static final int common_signin_button_text=0x7f070012;
+        public static final int common_signin_button_text=0x7f080012;
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
-        public static final int common_signin_button_text_long=0x7f070013;
-        public static final int hello_world=0x7f07001c;
-        public static final int title_activity_activity_admin_tools=0x7f070023;
-        public static final int title_activity_add_deadline=0x7f07001e;
-        public static final int title_activity_add_group=0x7f070021;
-        public static final int title_activity_deadlines=0x7f07001d;
-        public static final int title_activity_group_deadline=0x7f070024;
-        public static final int title_activity_my_groups=0x7f070022;
-        public static final int title_activity_reminders=0x7f070020;
-        public static final int title_activity_sync=0x7f07001f;
+        public static final int common_signin_button_text_long=0x7f080013;
+        public static final int hello_world=0x7f08001c;
+        public static final int pref_default_display_name=0x7f08002b;
+        public static final int pref_description_social_recommendations=0x7f080029;
+        /**  Example settings for Data & Sync 
+         */
+        public static final int pref_header_data_sync=0x7f08002d;
+        /**  Strings related to Settings 
+ Example General settings 
+         */
+        public static final int pref_header_general=0x7f080027;
+        /**  Example settings for Notifications 
+         */
+        public static final int pref_header_notifications=0x7f080030;
+        public static final int pref_ringtone_silent=0x7f080033;
+        public static final int pref_title_add_friends_to_messages=0x7f08002c;
+        public static final int pref_title_display_name=0x7f08002a;
+        public static final int pref_title_new_message_notifications=0x7f080031;
+        public static final int pref_title_ringtone=0x7f080032;
+        public static final int pref_title_social_recommendations=0x7f080028;
+        public static final int pref_title_sync_frequency=0x7f08002e;
+        public static final int pref_title_system_sync_settings=0x7f08002f;
+        public static final int pref_title_vibrate=0x7f080034;
+        public static final int sort_criteria=0x7f080026;
+        public static final int title_activity_activity_admin_tools=0x7f080023;
+        public static final int title_activity_add_deadline=0x7f08001e;
+        public static final int title_activity_add_group=0x7f080021;
+        public static final int title_activity_deadlines=0x7f08001d;
+        public static final int title_activity_group_deadline=0x7f080024;
+        public static final int title_activity_my_groups=0x7f080022;
+        public static final int title_activity_reminders=0x7f080020;
+        public static final int title_activity_settings=0x7f080025;
+        public static final int title_activity_sync=0x7f08001f;
     }
     public static final class style {
         /** 
@@ -482,12 +515,15 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f0a0000;
+        public static final int AppBaseTheme=0x7f0c0000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f0a0001;
-        public static final int Theme_UserDialog=0x7f0a0002;
+        public static final int AppTheme=0x7f0c0001;
+        public static final int Theme_UserDialog=0x7f0c0002;
+    }
+    public static final class xml {
+        public static final int settings=0x7f050000;
     }
     public static final class styleable {
         /** Attributes that can be used with a AdsAttrs.

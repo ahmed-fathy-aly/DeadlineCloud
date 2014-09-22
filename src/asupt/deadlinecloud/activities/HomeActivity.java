@@ -33,6 +33,9 @@ import asuspt.deadlinecloud.R.menu;
 public class HomeActivity extends Activity
 {
 
+	/* stuff for google cloud messsaging service
+	 * 
+	 */
 	public static final String EXTRA_MESSAGE = "message";
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -83,7 +86,7 @@ public class HomeActivity extends Activity
 
 	public void onButtonDeadlinesClicked(View v)
 	{
-		Intent intent = new Intent(this, DeadlinesActivity.class);
+		Intent intent = new Intent(this, MyDeadlinesActivity.class);
 		startActivity(intent);
 	}
 
@@ -99,6 +102,11 @@ public class HomeActivity extends Activity
 		startActivity(intent);
 	}
 
+	public void onButtonSettingsClicked(View v)
+	{
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+	}
 	/**
 	 * Check the device to make sure it has the Google Play Services APK. If it
 	 * doesn't, display a dialog that allows users to download the APK from the

@@ -2,10 +2,13 @@ package asupt.deadlinecloud.utils;
 
 import java.util.ArrayList;
 
+import android.R;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 import asupt.deadlinecloud.data.Group;
 
@@ -20,6 +23,11 @@ public class MyUtils
 	public static final String INTENT_GMAIL_ADDRESS = "gmailAddress";
 	public static final String INTENT_GROUP_ID = "groupId";
 	public static final String INTENT_GROUP_NAME = "groupName";
+	public static final int SORT_BY_ADD_DATE = 1;
+	public static final int SORT_BY_DEADLINE_DATE = 2;
+	public static final int SORT_BY_PRIORITY = 3;
+	public static final String INTENT_DEADLINE_ID = "deadlineID";
+	public static final String NEW_DEADLINE_KEY = "deadline.cloud.newDeadline";
 
 	public static void addGroupToPreferences(String groupName, String id, Context context)
 	{
@@ -55,4 +63,11 @@ public class MyUtils
 		}
 		return gUsernameList;
 	}
+
+	public static int getSortCriteria(Context context)
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		return preferences.getInt("sort_criteria", 1);
+	}
+
 }

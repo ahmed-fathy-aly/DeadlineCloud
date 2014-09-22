@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
+import asupt.deadlinecloud.data.DatabaseController;
+import asupt.deadlinecloud.data.Group;
 import asupt.deadlinecloud.utils.MyUtils;
 import asupt.deadlinecloud.web.WebMinion;
 import asuspt.deadlinecloud.R;
@@ -93,6 +95,7 @@ public class AddGroupActivity extends Activity
 		{
 			ProgressDialog progressDialog;
 			String message = "";
+			String groupId = "";
 
 			@Override
 			protected void onPreExecute()
@@ -105,23 +108,43 @@ public class AddGroupActivity extends Activity
 			@Override
 			protected Boolean doInBackground(Boolean... params)
 			{
-				// Ask the web minion to add this group
+				// references to UI
 				EditText groupNamEditText = (EditText) findViewById(R.id.editTextGroupTitle);
 				EditText descriptionEditText = (EditText) findViewById(R.id.editTextGroupDescription);
 				AutoCompleteTextView graduationYearEditText = (AutoCompleteTextView) findViewById(R.id.editTextGraduationYear);
 				AutoCompleteTextView departmentEditText = (AutoCompleteTextView) findViewById(R.id.editTextDepartment);
 				AutoCompleteTextView tagEditText = (AutoCompleteTextView) findViewById(R.id.editTextTag);
 
+				// group data
 				String groupName = groupNamEditText.getText().toString();
 				String graduationYear = graduationYearEditText.getText().toString();
 				String department = departmentEditText.getText().toString();
 				String tag = tagEditText.getText().toString();
 				String desciption = descriptionEditText.getText().toString();
-				Boolean is_public = false; // TODO: Ask the user if he wants it to be public.
-				WebMinion.addGroup(groupName, gmailAddress, graduationYear, department, tag,
-						desciption, is_public);
-				message = "added " + groupName + " by " + gmailAddress;
-				return true;
+				Boolean is_public = false; // TODO: Ask the user if he wants it
+											// to be public.
+				groupId = WebMinion.addGroup(groupName, gmailAddress, graduationYear, department,
+						tag, desciption, is_public);
+
+				// sync to the new group
+				boolean foundGroup = WebMinion.subscribe(groupId, gmailAddress);
+				if (foundGroup)
+				{
+					Group newGroup = new Group(groupName, groupId, 1);
+					newGroup.setDepartment(department);
+					newGroup.setGraduationYear(graduationYear);
+					newGroup.setName(groupName);
+					newGroup.setDescirption(desciption);
+					newGroup.setTag(tag);
+					new DatabaseController(AddGroupActivity.this).addGroup(newGroup);
+					message = "Added group successfully";
+					return true;
+				} else
+				{
+					message = "Couldn't add group";
+					return false;
+				}
+
 			}
 
 			@Override

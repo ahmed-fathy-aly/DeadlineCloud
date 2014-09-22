@@ -42,12 +42,19 @@ public class AddDeadlineActivity extends Activity
 
 		// check if we have a certain group called with the intent
 		if (getIntent().getExtras().containsKey(MyUtils.INTENT_GROUP_ID))
-		{
 			groupId = getIntent().getExtras().getString(MyUtils.INTENT_GROUP_ID);
+		else
+			groupId = "";
+
+		if (getIntent().getExtras().containsKey(MyUtils.INTENT_GROUP_NAME))
 			groupName = getIntent().getExtras().getString(MyUtils.INTENT_GROUP_NAME);
+		else
+			groupName = "";
+
+		if (getIntent().getExtras().containsKey(MyUtils.INTENT_GMAIL_ADDRESS))
 			gmailAddress = getIntent().getExtras().getString(MyUtils.INTENT_GMAIL_ADDRESS);
-		} else
-			groupId = MyUtils.TAG_ANY;
+		else
+			gmailAddress = "";
 
 		setUpSpiiners();
 	}
@@ -71,17 +78,7 @@ public class AddDeadlineActivity extends Activity
 
 		// group names
 		ArrayList<String> groupNames = new ArrayList<String>();
-		if (groupId.equals(MyUtils.TAG_ANY))
-		{
-			DatabaseController database = new DatabaseController(this);
-			groups = database.getAllGroups();
-			groupNames.add("Local");
-			for (Group group : groups)
-				groupNames.add(group.getName());
-		} else
-		{
-			groupNames.add(groupName);
-		}
+		groupNames.add(groupName);
 
 		// Group spinner
 		Spinner groupSpinner = (Spinner) findViewById(R.id.spinnerGroup);
@@ -133,29 +130,22 @@ public class AddDeadlineActivity extends Activity
 		}
 
 		// group
-		Spinner groupSpinner = (Spinner) findViewById(R.id.spinnerGroup);
-		idx = groupSpinner.getSelectedItemPosition();
-		if (groupId.equals(MyUtils.TAG_ANY))
+		if (groupName.equals(Deadline.localString))
 		{
-			if (idx == 0)
-			{
-				// local string
-				deadline.setGroupName(Deadline.localString);
+			// local string
+			deadline.setGroupName(Deadline.localString);
+			deadline.setInMyDeadlines(1);
 
-				// add deadline and leave
-				DeadlinesActivity.addDeadline(deadline);
-				finish();
-			} else
-			{
-				Group group = groups.get(idx - 1);
-				deadline.setGroupName(group.getName());
-				addDeadline(deadline, group.getId(), group.getName());
-			}
+			// add deadline and leave
+			MyDeadlinesActivity.addDeadline(deadline);
+			finish();
 		} else
 		{
 			deadline.setGroupName(groupName);
+			deadline.setGroupId(groupId);
 			addDeadline(deadline, groupId, groupName);
 		}
+
 	}
 
 	private void addDeadline(final Deadline deadline, final String destGroupId,
