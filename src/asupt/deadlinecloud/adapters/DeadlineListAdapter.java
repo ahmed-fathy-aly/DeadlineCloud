@@ -69,16 +69,6 @@ public class DeadlineListAdapter extends BaseExpandableListAdapter
 		TextView description = (TextView) convertView.findViewById(R.id.textViewDeadineDescription);
 		description.setText(listener.getDeadline(groupPosition).getDescription());
 
-		// delete button
-		ImageButton deletebutton = (ImageButton) convertView
-				.findViewById(R.id.buttonDeadlineDelete);
-		deletebutton.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View arg0)
-			{
-				listener.removeDeadline(groupPosition);
-			}
-		});
 
 		return convertView;
 	}

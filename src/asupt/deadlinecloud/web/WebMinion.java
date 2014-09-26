@@ -2,6 +2,7 @@ package asupt.deadlinecloud.web;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.android.gms.internal.gn;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
@@ -28,6 +31,7 @@ import android.util.Log;
 import android.util.Patterns;
 import asupt.deadlinecloud.data.Deadline;
 import asupt.deadlinecloud.data.Group;
+import asupt.deadlinecloud.utils.DuplicateGroupNameException;
 import asupt.deadlinecloud.utils.MyUtils;
 
 public class WebMinion
@@ -37,12 +41,10 @@ public class WebMinion
 	final static String initUrl = "http://mydeadlinecloud.herokuapp.com/";
 	final static String NOT_ADMIN_ERROR = "Only admins can do that";
 	final static String TRUE_STRING = "true";
+
 	public static Boolean isConnected(Context context)
 	{
-		if (true)
-			return true;
 
-		// TODO: Do something to get a context here.
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -106,11 +108,13 @@ public class WebMinion
 	 * @param department
 	 * @param graduationYear
 	 * @param desciption
+	 * @throws DuplicateGroupNameException
 	 * @add a new group. Note that when a user adds a group, he doesn't get
 	 *      subscribed to it.
 	 */
 	public static String addGroup(String groupName, String gmailId, String graduationYear,
-			String department, String tag, String description, Boolean is_public)
+			String department, String tag, String description, boolean is_public)
+			throws DuplicateGroupNameException
 	{
 
 		HttpPost httppost = new HttpPost(initUrl + "groups.json");
@@ -136,7 +140,7 @@ public class WebMinion
 			JSONObject res = new JSONObject(response_str);
 			if (response.getStatusLine().getStatusCode() == 422)
 			{
-				// TODO: Group name already taken.
+				throw new DuplicateGroupNameException();
 			}
 			if (response.getStatusLine().getStatusCode() == 201)
 			{
@@ -145,6 +149,8 @@ public class WebMinion
 
 		} catch (Exception ex)
 		{
+			if (ex.getClass() == DuplicateGroupNameException.class)
+				throw new DuplicateGroupNameException();
 			Log.e("Debug", "error: " + ex.getMessage(), ex);
 		}
 		return "";
@@ -258,8 +264,7 @@ public class WebMinion
 					.getDescription()));
 			nameValuePairs.add(new BasicNameValuePair("deadline[priority]", String.valueOf(deadline
 					.getWebPriority())));
-			// TODO: You might want to make sure he can't pick a date earlier
-			// than today. Not my part though.
+
 			Calendar t = deadline.getCalendar();
 			t.set(Calendar.YEAR, t.get(Calendar.YEAR) - 1900);
 			Log.i("asasdfad", String.valueOf(t.getTimeInMillis()));
@@ -277,8 +282,7 @@ public class WebMinion
 			String error = res.getString("error");
 			if (error.equals(NOT_ADMIN_ERROR))
 			{
-				// TODO: A non Admin is trying to add a deadline to a non public
-				// group.
+
 			}
 			if (response.getStatusLine().getStatusCode() == 201)
 			{
@@ -452,7 +456,6 @@ public class WebMinion
 			String error = res.getString("error");
 			if (error.equals(NOT_ADMIN_ERROR))
 			{
-				// TODO: A non Admin is trying to add an admin.
 			}
 			return (response.getStatusLine().getStatusCode() == 201);
 
@@ -484,7 +487,6 @@ public class WebMinion
 			String error = res.getString("error");
 			if (error.equals(NOT_ADMIN_ERROR))
 			{
-				// TODO: A non Admin is trying to delete a deadline.
 			}
 			return (response.getStatusLine().getStatusCode() == 201);
 		} catch (Exception ex)
@@ -500,7 +502,7 @@ public class WebMinion
 	public static boolean canManageGroup(String groupId, String gmailId)
 	{
 
-		HttpGet httpget = new HttpGet(initUrl + "groups/" + groupId + "permissions.json?phone_id="
+		HttpGet httpget = new HttpGet(initUrl + "groups/" + groupId + "/permissions.json?phone_id="
 				+ gmailId);
 
 		try

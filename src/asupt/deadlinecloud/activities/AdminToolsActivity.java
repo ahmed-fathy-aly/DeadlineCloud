@@ -3,6 +3,7 @@ package asupt.deadlinecloud.activities;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +39,11 @@ public class AdminToolsActivity extends Activity
 		groupId = getIntent().getExtras().getString(MyUtils.INTENT_GROUP_ID);
 
 	}
-
+	public void onBackPressed()
+	{
+		NavUtils.navigateUpFromSameTask(this);
+		super.onBackPressed();
+	}
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
 	 */
@@ -74,6 +79,11 @@ public class AdminToolsActivity extends Activity
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+			
+		case R.id.action_settings :
+				Intent intent = new Intent(this, SettingsActivity.class);
+				startActivity(intent);
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -89,8 +99,8 @@ public class AdminToolsActivity extends Activity
 			protected void onPreExecute()
 			{
 				// make a progress dialog
-				progressDialog = ProgressDialog.show(AdminToolsActivity.this, "Syncing",
-						"Syncing...");
+				progressDialog = ProgressDialog.show(AdminToolsActivity.this, "Adding",
+						"Adding new admin...");
 			}
 
 			@Override

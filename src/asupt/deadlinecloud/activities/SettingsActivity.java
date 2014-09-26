@@ -23,6 +23,7 @@ public class SettingsActivity extends PreferenceActivity
 		// Show the Up button in the action bar.
 		setupActionBar();
 	}
+	
 
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.

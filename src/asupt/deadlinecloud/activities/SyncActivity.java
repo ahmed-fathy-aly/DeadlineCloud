@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.Toast;
 import asupt.deadlinecloud.adapters.AllGroupsListAdapter;
 import asupt.deadlinecloud.adapters.AllGroupsListAdapter.AllGroupsListListener;
 import asupt.deadlinecloud.data.DatabaseController;
@@ -84,6 +85,11 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		case R.id.action_settings:
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			return true;
+
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -94,7 +100,6 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 		NavUtils.navigateUpFromSameTask(this);
 		super.onBackPressed();
 	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
@@ -118,14 +123,23 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 			ArrayList<String> graduationYearHints;
 			ArrayList<String> departmentHints;
 			ArrayList<String> tagsHints;
+			String message = "";
 
 			protected void onPreExecute()
 			{
 				progressDialog = ProgressDialog.show(SyncActivity.this, "Loading", "Loading...");
+
 			}
 
 			protected Boolean doInBackground(Boolean... params)
 			{
+				// check connection
+				if (WebMinion.isConnected(SyncActivity.this) == false)
+				{
+					message = "No Connection";
+					return false;
+				}
+
 				// load graduation year hints
 				graduationYearHints = new ArrayList<String>();
 				ArrayList<String> serverGraduationYear = WebMinion.getGraduationYears();
@@ -149,6 +163,15 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 
 			protected void onPostExecute(Boolean result)
 			{
+				// if failed
+				if (result == false)
+				{
+					Toast.makeText(SyncActivity.this, message, Toast.LENGTH_SHORT).show();
+					graduationYearHints = new ArrayList<String>();
+					departmentHints = new ArrayList<String>();
+					tagsHints = new ArrayList<String>();
+				}
+
 				// set graduation year edit text
 				ArrayAdapter<String> graduationYearAdapter = new ArrayAdapter<String>(
 						SyncActivity.this, android.R.layout.simple_dropdown_item_1line,
@@ -218,8 +241,8 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 		// get the groups that match those tags from the server
 		new AsyncTask<Boolean, Boolean, Boolean>()
 		{
-
 			ProgressDialog progressDialog;
+			String message = "";
 
 			@Override
 			protected void onPreExecute()
@@ -231,6 +254,12 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 			@Override
 			protected Boolean doInBackground(Boolean... params)
 			{
+				// check connection
+				if (WebMinion.isConnected(SyncActivity.this) == false)
+				{
+					message = "No Connection";
+					return false;
+				}
 				// reference to the edit texts
 				AutoCompleteTextView graduationYearEditText = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewGraduationYeaSearchr);
 				AutoCompleteTextView departmentEditText = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewDepartmentSearch);
@@ -255,6 +284,11 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 			@Override
 			protected void onPostExecute(Boolean result)
 			{
+				if (result == false)
+				{
+					Toast.makeText(SyncActivity.this, message, Toast.LENGTH_SHORT).show();
+					allgroups = new ArrayList<Group>();
+				}
 				progressDialog.dismiss();
 				allGroupsListAdapter.notifyDataSetChanged();
 			}
@@ -269,6 +303,7 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 		new AsyncTask<Boolean, Boolean, Boolean>()
 		{
 			ProgressDialog progressDialog;
+			String message;
 
 			@Override
 			protected void onPreExecute()
@@ -280,7 +315,12 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 			@Override
 			protected Boolean doInBackground(Boolean... params)
 			{
-
+				// check connection
+				if (WebMinion.isConnected(SyncActivity.this) == false)
+				{
+					message = "No Connection";
+					return false;
+				}
 				// ask the web minion to subscribe
 				Group group = allgroups.get(index);
 				String gmailId = WebMinion.getGmailId(SyncActivity.this);
@@ -296,6 +336,11 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 			@Override
 			protected void onPostExecute(Boolean result)
 			{
+				// if failed
+				if (result == false)
+				{
+					Toast.makeText(SyncActivity.this, message, Toast.LENGTH_SHORT).show();
+				}
 				// notify both lists
 				allGroupsListAdapter.notifyDataSetChanged();
 

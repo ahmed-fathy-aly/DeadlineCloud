@@ -205,6 +205,14 @@ public class DatabaseController extends SQLiteOpenHelper
 
 	}
 
+	public void removeFromMyDeadlines(Deadline deadline)
+	{
+		ContentValues entry = new ContentValues();
+		entry.put(KEY_DEADLINE_IN_MY_DEADLINES, 0);
+		getWritableDatabase().update(DEADLINES_TABLE_NAME, entry,
+				KEY_DEADLINE_ID + "=" + deadline.getDatabaseId(), null);
+	}
+
 	/* Reminders */
 	public ArrayList<Reminder> getAllReminders()
 	{

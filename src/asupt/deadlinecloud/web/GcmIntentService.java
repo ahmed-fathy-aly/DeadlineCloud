@@ -125,7 +125,8 @@ public class GcmIntentService extends IntentService
 		Intent intent = new Intent(this, GroupDeadlineActivity.class);
 		intent.putExtra(MyUtils.INTENT_GROUP_ID, deadline.getGroupId());
 		intent.putExtra(MyUtils.INTENT_GROUP_NAME, deadline.getGroupName());
-		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		// mark deadline intent
 		Intent addDeadlineIntenet = new Intent(MyUtils.NEW_DEADLINE_KEY);
@@ -133,7 +134,7 @@ public class GcmIntentService extends IntentService
 		Log.e("Game", deadline.getTitle() + ":" + deadline.getWebId());
 		PendingIntent addDeadlinePIntent = PendingIntent.getBroadcast(this, 0, addDeadlineIntenet,
 				PendingIntent.FLAG_UPDATE_CURRENT);
-		
+
 		// calendar intent
 		Intent calendarIntent = new Intent(Intent.ACTION_EDIT);
 		calendarIntent.setType("vnd.android.cursor.item/event");
@@ -160,7 +161,7 @@ public class GcmIntentService extends IntentService
 			builder.setDefaults(Notification.DEFAULT_VIBRATE);
 			builder.setDefaults(Notification.DEFAULT_LIGHTS);
 		}
-		builder.setSmallIcon(asuspt.deadlinecloud.R.drawable.ic_menu_my_calendar);
+		builder.setSmallIcon(asuspt.deadlinecloud.R.drawable.notifications_icon);
 		builder.setContentIntent(pIntent);
 		builder.setAutoCancel(true);
 		builder.addAction(asuspt.deadlinecloud.R.drawable.ic_checkmark_holo_light, "Mark",

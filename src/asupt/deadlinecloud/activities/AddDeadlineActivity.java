@@ -59,7 +59,6 @@ public class AddDeadlineActivity extends Activity
 		setUpSpiiners();
 	}
 
-	@Override
 	public void onBackPressed()
 	{
 		NavUtils.navigateUpFromSameTask(this);
@@ -135,9 +134,23 @@ public class AddDeadlineActivity extends Activity
 			// local string
 			deadline.setGroupName(Deadline.localString);
 			deadline.setInMyDeadlines(1);
+			
+			// find the id of the latest deadline and make the id of this one higher
+			int id = 0;
+			for (Deadline localDeadline : new DatabaseController(this).getAllDeadlines()) 
+					try
+					{
+						id = Math.max(id, Integer.parseInt(localDeadline.getWebId()));
+					} catch (Exception e)
+					{
+						id = 0;
+					}
+				
+			deadline.setWebId((id) + "");
 
 			// add deadline and leave
 			MyDeadlinesActivity.addDeadline(deadline);
+			setResult(RESULT_OK);
 			finish();
 		} else
 		{
@@ -167,6 +180,13 @@ public class AddDeadlineActivity extends Activity
 			@Override
 			protected Boolean doInBackground(Boolean... params)
 			{
+				// check connection
+				if (WebMinion.isConnected(AddDeadlineActivity.this) == false)
+				{
+					message = "No Connection";
+					return false;
+				}
+				
 				// ask the minion to add it
 				message = "Deadline added to " + destGroupName + "\nby  " + gmailAddress;
 				WebMinion.postDeadline(destGroupId, gmailAddress, deadline);
@@ -176,11 +196,20 @@ public class AddDeadlineActivity extends Activity
 			@Override
 			protected void onPostExecute(Boolean result)
 			{
+				// check result
+				if (result == false)
+				{
+					Toast.makeText(AddDeadlineActivity.this, message, Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					Intent returnIntent = new Intent();
+					setResult(RESULT_OK, returnIntent);
+					finish();
+				}
+				
 				// dissmiss
 				progressDialog.dismiss();
-				Intent returnIntent = new Intent();
-				setResult(RESULT_OK, returnIntent);
-				finish();
 
 			}
 

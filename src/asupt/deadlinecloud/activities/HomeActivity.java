@@ -17,8 +17,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
@@ -53,8 +55,8 @@ public class HomeActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		super.onCreate(savedInstanceState);
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		setContentView(R.layout.activity_home);
 
 		// Check device for Play Services APK. If check succeeds, proceed with
@@ -75,13 +77,24 @@ public class HomeActivity extends Activity
 		}
 
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() == R.id.action_settings)
+		{
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void onButtonDeadlinesClicked(View v)

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import asupt.deadlinecloud.data.DatabaseController;
@@ -77,17 +78,20 @@ public class AddGroupActivity extends Activity
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+
+		case R.id.action_settings:
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
 	public void onBackPressed()
 	{
 		NavUtils.navigateUpFromSameTask(this);
 		super.onBackPressed();
 	}
-
 	public void onButtonAddGroupClicked(View v)
 	{
 		// make a thread that asks the web minion to add the group
@@ -108,23 +112,38 @@ public class AddGroupActivity extends Activity
 			@Override
 			protected Boolean doInBackground(Boolean... params)
 			{
+				// check connection
+				if (WebMinion.isConnected(AddGroupActivity.this) == false)
+				{
+					message = "No Connection";
+					return false;
+				}
+				
 				// references to UI
 				EditText groupNamEditText = (EditText) findViewById(R.id.editTextGroupTitle);
 				EditText descriptionEditText = (EditText) findViewById(R.id.editTextGroupDescription);
 				AutoCompleteTextView graduationYearEditText = (AutoCompleteTextView) findViewById(R.id.editTextGraduationYear);
 				AutoCompleteTextView departmentEditText = (AutoCompleteTextView) findViewById(R.id.editTextDepartment);
 				AutoCompleteTextView tagEditText = (AutoCompleteTextView) findViewById(R.id.editTextTag);
-
+				CheckBox anyOneCanEdit = (CheckBox) findViewById(R.id.checkBoxPublicGroup);
+				
 				// group data
 				String groupName = groupNamEditText.getText().toString();
 				String graduationYear = graduationYearEditText.getText().toString();
 				String department = departmentEditText.getText().toString();
 				String tag = tagEditText.getText().toString();
 				String desciption = descriptionEditText.getText().toString();
-				Boolean is_public = false; // TODO: Ask the user if he wants it
-											// to be public.
-				groupId = WebMinion.addGroup(groupName, gmailAddress, graduationYear, department,
-						tag, desciption, is_public);
+				boolean is_public = anyOneCanEdit.isChecked();
+				
+				try
+				{
+					groupId = WebMinion.addGroup(groupName, gmailAddress, graduationYear, department,
+							tag, desciption, is_public);
+				} catch (asupt.deadlinecloud.utils.DuplicateGroupNameException e)
+				{
+					message = "This group name already exists";
+					return false;
+				}
 
 				// sync to the new group
 				boolean foundGroup = WebMinion.subscribe(groupId, gmailAddress);
@@ -137,11 +156,10 @@ public class AddGroupActivity extends Activity
 					newGroup.setDescirption(desciption);
 					newGroup.setTag(tag);
 					new DatabaseController(AddGroupActivity.this).addGroup(newGroup);
-					message = "Added group successfully";
 					return true;
 				} else
 				{
-					message = "Couldn't add group";
+					message = "Oops...Something went wrong";
 					return false;
 				}
 
@@ -150,12 +168,20 @@ public class AddGroupActivity extends Activity
 			@Override
 			protected void onPostExecute(Boolean result)
 			{
+				// check result
+				if (result == false)
+				{
+					Toast.makeText(AddGroupActivity.this, message, Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					Intent returnIntent = new Intent();
+					setResult(RESULT_OK, returnIntent);
+					AddGroupActivity.this.finish();
+				}
+				
 				// dismiss
 				progressDialog.dismiss();
-				Toast.makeText(AddGroupActivity.this, message, Toast.LENGTH_SHORT).show();
-				Intent returnIntent = new Intent();
-				setResult(RESULT_OK, returnIntent);
-				AddGroupActivity.this.finish();
 			}
 		}.execute(true);
 	}

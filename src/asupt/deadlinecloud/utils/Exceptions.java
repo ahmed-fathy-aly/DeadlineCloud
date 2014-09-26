@@ -1,8 +1,8 @@
 package asupt.deadlinecloud.utils;
 
-public class Exceptions
+public  class Exceptions
 {
 
-	
-	
+
+
 }

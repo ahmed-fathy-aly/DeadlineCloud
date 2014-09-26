@@ -6,8 +6,10 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -22,11 +24,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toast;
 import asupt.deadlinecloud.adapters.MyGroupGridAdapter;
 import asupt.deadlinecloud.adapters.MyGroupGridAdapter.MyGroupListListener;
 import asupt.deadlinecloud.data.DatabaseController;
 import asupt.deadlinecloud.data.Group;
 import asupt.deadlinecloud.utils.MyUtils;
+import asupt.deadlinecloud.web.WebMinion;
 import asuspt.deadlinecloud.R;
 
 public class MyGroupsActivity extends Activity implements MyGroupListListener
@@ -47,7 +51,11 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 		setupActionBar();
 		setMyGroupsList();
 	}
-
+	public void onBackPressed()
+	{
+		NavUtils.navigateUpFromSameTask(this);
+		super.onBackPressed();
+	}
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar()
 	{
@@ -82,15 +90,13 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 			return true;
 		case R.id.addNewGroupButton:
 			onAddNewGroupButtonClicked();
+			return true;
+		case R.id.action_settings:
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onBackPressed()
-	{
-		NavUtils.navigateUpFromSameTask(this);
-		super.onBackPressed();
 	}
 
 	@Override
@@ -119,45 +125,107 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 			unSync(acmi.position);
 		} else if (item.getTitle().equals("Admin tools"))
 		{
-			// make a dialog from which the user chooses his account
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Choose you gmail-account");
-
-			// list of accounts
-			final ArrayList<String> gUsernameList = MyUtils.getGmailAccounts(this);
-			ListView lv = new ListView(this);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, android.R.id.text1, gUsernameList);
-			lv.setAdapter(adapter);
-			lv.setOnItemClickListener(new OnItemClickListener()
-			{
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-				{
-					// when one of them clicked open the admin tools activity
-					String gmailAddress = gUsernameList.get(position);
-					String groupId = myGroups.get(acmi.position).getId();
-					Intent intent = new Intent(MyGroupsActivity.this, AdminToolsActivity.class);
-					intent.putExtra(MyUtils.INTENT_GMAIL_ADDRESS, gmailAddress);
-					intent.putExtra(MyUtils.INTENT_GROUP_ID, groupId);
-					startActivity(intent);
-				}
-			});
-			builder.setView(lv);
-
-			// cancel button
-			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-			{
-				public void onClick(DialogInterface dialog, int whichButton)
-				{
-					dialog.dismiss();
-				}
-			});
-			final Dialog dialog = builder.create();
-			dialog.show();
-
+			openAdminsTools(myGroups.get(acmi.position));
 			return true;
 		}
 		return super.onContextItemSelected(item);
+	}
+
+	private void openAdminsTools(final Group group)
+	{
+		// make a dialog from which the user chooses his account
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Choose you gmail-account");
+
+		// cancel button
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int whichButton)
+			{
+				dialog.dismiss();
+			}
+		});
+
+		// list of accounts
+		final ArrayList<String> gUsernameList = MyUtils.getGmailAccounts(this);
+		ListView lv = new ListView(this);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, android.R.id.text1, gUsernameList);
+		lv.setAdapter(adapter);
+		builder.setView(lv);
+		final Dialog dialog = builder.create();
+
+		lv.setOnItemClickListener(new OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
+			{
+				// when one of them clicked open the admin tools activity
+				final String gmailAddress = gUsernameList.get(position);
+				final String groupId = group.getId();
+
+				// check this person has the right
+				new AsyncTask<Boolean, Boolean, Boolean>()
+				{
+					ProgressDialog progressDialog;
+					String message;
+
+					@Override
+					protected void onPreExecute()
+					{
+						progressDialog = ProgressDialog.show(MyGroupsActivity.this,
+								"Checking If you're an admin",
+								"web minion searching through admins' mail ");
+					}
+
+					@Override
+					protected Boolean doInBackground(Boolean... params)
+					{
+						// check connection
+						if (WebMinion.isConnected(MyGroupsActivity.this) == false)
+						{
+							message = "No Connection";
+							return false;
+						}
+
+						// check adminstriship
+						if (WebMinion.canManageGroup(groupId, gUsernameList.get(position)))
+						{
+							return true;
+						} else
+						{
+							message = "Only admins can add deadlines";
+							return false;
+						}
+					}
+
+					@Override
+					protected void onPostExecute(Boolean result)
+					{
+						if (result == false)
+						{
+							Toast.makeText(MyGroupsActivity.this, message, Toast.LENGTH_SHORT)
+									.show();
+						} else
+						{
+							// start the add deadline activity
+							Intent intent = new Intent(MyGroupsActivity.this,
+									AdminToolsActivity.class);
+							intent.putExtra(MyUtils.INTENT_GMAIL_ADDRESS, gmailAddress);
+							intent.putExtra(MyUtils.INTENT_GROUP_ID, groupId);
+							startActivity(intent);
+							dialog.dismiss();
+
+						}
+						progressDialog.dismiss();
+					}
+
+				}.execute(true);
+
+			}
+		});
+
+		dialog.show();
+
 	}
 
 	@Override
@@ -170,7 +238,7 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	/* groups stuff */
 	private void setMyGroupsList()
 	{
@@ -227,7 +295,7 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 		// make a dialog from which the user chooses his account
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Choose you gmail-account");
-	
+
 		// cancel button
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
 		{
@@ -244,8 +312,8 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 				android.R.layout.simple_list_item_1, android.R.id.text1, gUsernameList);
 		lv.setAdapter(adapter);
 		builder.setView(lv);
-		
-		// on click 
+
+		// on click
 		final Dialog dialog = builder.create();
 		lv.setOnItemClickListener(new OnItemClickListener()
 		{
@@ -259,7 +327,6 @@ public class MyGroupsActivity extends Activity implements MyGroupListListener
 				dialog.dismiss();
 			}
 		});
-
 
 		dialog.show();
 
