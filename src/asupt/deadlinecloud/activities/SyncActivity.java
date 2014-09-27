@@ -42,6 +42,11 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 	private AllGroupsListAdapter allGroupsListAdapter;
 	private ExpandableListView allGroupsListView;
 
+	/* tags */
+	ArrayList<String> graduationYearHints;
+	ArrayList<String> departmentHints;
+	ArrayList<String> tagsHints;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -100,6 +105,7 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 		NavUtils.navigateUpFromSameTask(this);
 		super.onBackPressed();
 	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
@@ -120,9 +126,6 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 		new AsyncTask<Boolean, Boolean, Boolean>()
 		{
 			ProgressDialog progressDialog;
-			ArrayList<String> graduationYearHints;
-			ArrayList<String> departmentHints;
-			ArrayList<String> tagsHints;
 			String message = "";
 
 			protected void onPreExecute()
@@ -157,7 +160,11 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 				ArrayList<String> serverTags = WebMinion.getTags();
 				for (String tag : serverTags)
 					tagsHints.add(tag);
+				
+				// load the groups
+				allgroups = WebMinion.getAllGroups(MyUtils.TAG_ANY, MyUtils.TAG_ANY, MyUtils.TAG_ANY);
 
+				
 				return true;
 			}
 
@@ -195,6 +202,8 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 						.findViewById(R.id.autoCompleteTextViewTagSearch);
 				tags.setAdapter(tagsAdapter);
 
+				// set group list
+				allGroupsListAdapter.notifyDataSetChanged();
 				progressDialog.dismiss();
 
 			}
@@ -214,7 +223,6 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 	/* all groups stuff */
 	private void setAllGroupsList()
 	{
-
 		// at first the list is empty
 		allgroups = new ArrayList<Group>();
 
@@ -266,18 +274,31 @@ public class SyncActivity extends Activity implements AllGroupsListListener
 				AutoCompleteTextView tagEditText = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewTagSearch);
 
 				// get strings
-				String graduationYear = graduationYearEditText.getText().toString();
+				String graduationYear = graduationYearEditText.getText().toString().trim();
 				if (graduationYear.equals(""))
 					graduationYear = MyUtils.TAG_ANY;
-				String department = departmentEditText.getText().toString();
+				String department = departmentEditText.getText().toString().trim();
 				if (department.equals(""))
 					department = MyUtils.TAG_ANY;
-				String tag = tagEditText.getText().toString();
+				String tag = tagEditText.getText().toString().trim();
 				if (tag.equals(""))
 					tag = MyUtils.TAG_ANY;
 
+				// if a tag is not there
+				if (!tagsHints.contains(tag) || !departmentHints.contains(department)
+						|| !graduationYearHints.contains(graduationYear))
+				{
+					message = "No groups matched those tags";
+					return false;
+				}
+
 				// get groups
 				allgroups = WebMinion.getAllGroups(graduationYear, department, tag);
+				if (allgroups.size() == 0)
+				{
+					message = "No groups matched those tags";
+					return false;
+				}
 				return true;
 			}
 

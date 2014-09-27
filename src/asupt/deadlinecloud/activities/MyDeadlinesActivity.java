@@ -29,6 +29,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RadialGradient;
+import android.graphics.Shader.TileMode;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import asupt.deadlinecloud.adapters.DeadlineListAdapter;
@@ -86,8 +88,12 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 	@Override
 	protected void onResume()
 	{
-		if (deadlines != null)
+		try
+		{
 			sortDeadlines();
+		} catch (Exception e)
+		{
+		}
 		super.onResume();
 	}
 
@@ -96,7 +102,6 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 		// get the deadlines
 		database = new DatabaseController(this);
 		deadlines = database.getMyDeadlines();
-		sortDeadlines();
 
 		// manage the expandable list
 		listView = (ExpandableListView) findViewById(R.id.expandableList);
@@ -105,6 +110,9 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 
 		// register for context menu
 		registerForContextMenu(listView);
+
+		// sort
+		sortDeadlines();
 
 	}
 
@@ -193,7 +201,7 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 				}
 			}
 		});
-
+		listAdapter.notifyDataSetChanged();
 	}
 
 	/* context menu stuff */
@@ -286,13 +294,17 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 		// paint background white
 		int leftMargin = 10;
 		int upMargin = 20;
+		int totalWidth = view.getWidth() + leftMargin * 2;
+		int totalHeight = view.getHeight() + upMargin * 2;
 		Bitmap bitmap = Bitmap.createBitmap(view.getWidth() + leftMargin * 2, view.getHeight()
 				+ upMargin * 2, Bitmap.Config.ARGB_8888);
 		c = new Canvas(bitmap);
 
-		Paint p = new Paint();
-		p.setColor(0x88ECF0F0);
-		c.drawRect(0, 0, c.getWidth(), c.getHeight(), p);
+		RadialGradient grad = new RadialGradient(totalWidth / 2, totalHeight / 2, Math.min(
+				totalWidth / 2, totalHeight / 2), 0xffECF0F0, 0xffCCF0F0, TileMode.CLAMP);
+		Paint paint = new Paint();
+		paint.setShader(grad);
+		c.drawRect(0, 0, c.getWidth(), c.getHeight(), paint);
 		c.drawBitmap(viewBitmap, leftMargin, upMargin, new Paint());
 
 		// get uri
@@ -367,6 +379,9 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 			Intent intentS = new Intent(this, SettingsActivity.class);
 			startActivity(intentS);
 			return true;
+		case R.id.shareDeadlinesImage:
+			shareDeadlinesList();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -377,17 +392,21 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 		int upmargin = 30;
 		int leftMargin = 10;
 		int nDeadlines = deadlines.size();
-		int totalHeight = nDeadlines * upmargin;
+		int totalHeight = (nDeadlines + 1) * upmargin;
 		for (int i = 0; i < deadlines.size(); i++)
 			totalHeight += listView.getChildAt(0).getHeight();
-		int totalWidth = listView.getChildAt(0).getWidth() + leftMargin;
+		int totalWidth = listView.getChildAt(0).getWidth() + leftMargin * 2;
 
-		// make bitmap of all the list views
+		// make bitmap with a background
 		Bitmap bitmap = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(bitmap);
+		RadialGradient grad = new RadialGradient(totalWidth / 2, totalHeight / 2, Math.min(
+				totalWidth / 2, totalHeight / 2), 0xffECF0F0, 0xffCCF0F0, TileMode.CLAMP);
 		Paint paint = new Paint();
-		paint.setColor(0x88ECF0F0);
+		paint.setShader(grad);
 		c.drawRect(0, 0, c.getWidth(), c.getHeight(), paint);
+
+		// paint each view
 		int currHeight = upmargin;
 		for (int i = 0; i < deadlines.size(); i++)
 		{

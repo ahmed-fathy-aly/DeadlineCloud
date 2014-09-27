@@ -264,7 +264,7 @@ containing a value of this type.
     public static final class id {
         public static final int action_settings=0x7f07003c;
         public static final int addDeadlineButton=0x7f07003d;
-        public static final int addGroupDeadlineButton=0x7f07003e;
+        public static final int addGroupDeadlineButton=0x7f07003f;
         public static final int addNewGroupButton=0x7f070041;
         public static final int autoCompleteTextViewDepartmentSearch=0x7f07001b;
         public static final int autoCompleteTextViewGraduationYeaSearchr=0x7f07001a;
@@ -301,11 +301,11 @@ containing a value of this type.
         public static final int listViewAllGroups=0x7f07001e;
         public static final int none=0x7f070000;
         public static final int normal=0x7f070001;
-        public static final int refreshGroupDeadlines=0x7f07003f;
+        public static final int refreshGroupDeadlines=0x7f070040;
         public static final int reminderBackground=0x7f070035;
         public static final int reminderPriorityIndicator=0x7f070036;
         public static final int satellite=0x7f070002;
-        public static final int shareDeadlinesImage=0x7f070040;
+        public static final int shareDeadlinesImage=0x7f07003e;
         public static final int spinnerGroup=0x7f07000d;
         public static final int spinnerPriority=0x7f07000c;
         public static final int terrain=0x7f070003;

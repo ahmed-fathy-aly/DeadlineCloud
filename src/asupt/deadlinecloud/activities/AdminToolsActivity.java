@@ -94,7 +94,9 @@ public class AdminToolsActivity extends Activity
 		new AsyncTask<Boolean, Boolean, Boolean>()
 		{
 			ProgressDialog progressDialog;
-
+			String message = "";
+			String newAdminMail = "";
+			
 			@Override
 			protected void onPreExecute()
 			{
@@ -106,18 +108,35 @@ public class AdminToolsActivity extends Activity
 			@Override
 			protected Boolean doInBackground(Boolean... params)
 			{
+				// check connection
+				if (WebMinion.isConnected(AdminToolsActivity.this) == false)
+				{
+					message = "No Connection";
+					return false;
+				}
+				
 				// get the chosen email
 				EditText emailEditText = (EditText) findViewById(R.id.editTextAdminEmailAddress);
-				String newAdminMail = emailEditText.getText().toString();
+				newAdminMail = emailEditText.getText().toString().trim();
 				WebMinion.addAdmin(groupId, gmailAddress, newAdminMail);
 
+				// check it added successfuly
+				if (!WebMinion.canManageGroup(groupId, newAdminMail))
+				{
+					message = "Oops...Something went wrong";
+					return false;
+				}
 				return true;
 			}
 
 			@Override
 			protected void onPostExecute(Boolean result)
 			{
-
+				// check it didn't fail
+				if (result == false)
+					Toast.makeText(AdminToolsActivity.this, message, Toast.LENGTH_SHORT).show();
+				else
+					Toast.makeText(AdminToolsActivity.this, "New Admin added", Toast.LENGTH_SHORT).show();
 				// dismiss the progress dialog
 				progressDialog.dismiss();
 			}

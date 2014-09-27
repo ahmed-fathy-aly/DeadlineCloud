@@ -19,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Shader.TileMode;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
@@ -81,11 +82,13 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 
 		setDeadlinesList();
 	}
+
 	public void onBackPressed()
 	{
 		NavUtils.navigateUpFromSameTask(this);
 		super.onBackPressed();
 	}
+
 	@Override
 	protected void onResume()
 	{
@@ -101,55 +104,6 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		{
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.group_deadline, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		case R.id.addGroupDeadlineButton:
-			onAddDeadlineButtonClicked();
-			return true;
-		case R.id.refreshGroupDeadlines:
-			refreshDeadlines();
-			return true;
-
-		case R.id.shareDeadlinesImage:
-			try
-			{
-				shareDeadlinesList();
-
-			} catch (Exception e)
-			{
-				Toast.makeText(this, "Couldn't share :( ", Toast.LENGTH_SHORT).show();
-			}
-			return true;
-
-		case R.id.action_settings:
-			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -293,13 +247,17 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		// paint background white
 		int leftMargin = 10;
 		int upMargin = 20;
+		int totalWidth = view.getWidth() + leftMargin * 2;
+		int totalHeight = view.getHeight() + upMargin * 2;
 		Bitmap bitmap = Bitmap.createBitmap(view.getWidth() + leftMargin * 2, view.getHeight()
 				+ upMargin * 2, Bitmap.Config.ARGB_8888);
 		c = new Canvas(bitmap);
 
-		Paint p = new Paint();
-		p.setColor(0x88ECF0F0);
-		c.drawRect(0, 0, c.getWidth(), c.getHeight(), p);
+		RadialGradient grad = new RadialGradient(totalWidth / 2, totalHeight / 2, Math.min(
+				totalWidth / 2, totalHeight / 2), 0xffECF0F0, 0xffCCF0F0, TileMode.CLAMP);
+		Paint paint = new Paint();
+		paint.setShader(grad);
+		c.drawRect(0, 0, c.getWidth(), c.getHeight(), paint);
 		c.drawBitmap(viewBitmap, leftMargin, upMargin, new Paint());
 
 		// get uri
@@ -435,11 +393,7 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 					return false;
 				}
 
-				if (!WebMinion.deleteDeadline(deadline, gmailAddress, groupId, groupName))
-				{
-					message = "Oops..something went wrong";
-					return false;
-				}
+				WebMinion.deleteDeadline(deadline, gmailAddress, groupId, groupName);
 				return true;
 			}
 
@@ -463,6 +417,55 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 	}
 
 	/* Options Item method */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.group_deadline, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		case R.id.addGroupDeadlineButton:
+			onAddDeadlineButtonClicked();
+			return true;
+		case R.id.refreshGroupDeadlines:
+			refreshDeadlines();
+			return true;
+
+		case R.id.shareDeadlinesImage:
+			try
+			{
+				shareDeadlinesList();
+
+			} catch (Exception e)
+			{
+				Toast.makeText(this, "Couldn't share :( ", Toast.LENGTH_SHORT).show();
+			}
+			return true;
+
+		case R.id.action_settings:
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	private void onAddDeadlineButtonClicked()
 	{
 		// make a dialog from which the user chooses his account
@@ -621,17 +624,20 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 		int upmargin = 30;
 		int leftMargin = 10;
 		int nDeadlines = deadlines.size();
-		int totalHeight = nDeadlines * upmargin;
+		int totalHeight = (nDeadlines+1) * upmargin;
 		for (int i = 0; i < deadlines.size(); i++)
 			totalHeight += listView.getChildAt(0).getHeight();
-		int totalWidth = listView.getChildAt(0).getWidth() + leftMargin;
+		int totalWidth = listView.getChildAt(0).getWidth() + leftMargin*2;
 
-		// make bitmap of all the list views
+		// make bitmap with a background
 		Bitmap bitmap = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(bitmap);
+		RadialGradient grad = new RadialGradient(totalWidth/2, totalHeight/2, Math.min(totalWidth/2, totalHeight/2), 0xffECF0F0, 0xffCCF0F0, TileMode.CLAMP);
 		Paint paint = new Paint();
-		paint.setColor(0x88ECF0F0);
+		paint.setShader(grad);
 		c.drawRect(0, 0, c.getWidth(), c.getHeight(), paint);
+		
+		// paint each view
 		int currHeight = upmargin;
 		for (int i = 0; i < deadlines.size(); i++)
 		{

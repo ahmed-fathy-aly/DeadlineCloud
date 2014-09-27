@@ -13,5 +13,11 @@
         android:title="Add"
         android:titleCondensed="Add"/>
 
-
+        <item
+        android:id="@+id/shareDeadlinesImage"
+        android:icon="@android:drawable/ic_menu_share"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom|withText"
+        android:title="Share Image"
+        android:titleCondensed="Share"/>
 </menu>
