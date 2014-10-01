@@ -34,7 +34,7 @@ public class Deadline
 	private String webId;
 	private String groupId;
 	private int inMyDeadlines;
-
+	private String posterMail;
 	/* Constructors */
 	public Deadline()
 	{
@@ -176,6 +176,16 @@ public class Deadline
 	public void setInMyDeadlines(int inMyDeadlines)
 	{
 		this.inMyDeadlines = inMyDeadlines;
+	}
+
+	public String getPosterMail()
+	{
+		return posterMail;
+	}
+
+	public void setPosterMail(String posterMail)
+	{
+		this.posterMail = posterMail;
 	}
 
 	/* Methods */

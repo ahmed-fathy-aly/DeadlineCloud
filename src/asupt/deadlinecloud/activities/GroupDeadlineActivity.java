@@ -296,7 +296,7 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 			share.putExtra(Intent.EXTRA_STREAM, uri);
 
 			// Show the social share chooser list
-			startActivity(Intent.createChooser(share, "Share Image Tutorial"));
+			startActivity(Intent.createChooser(share, "Share Deadline Image"));
 
 		} catch (Exception e)
 		{
@@ -498,7 +498,7 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 				new AsyncTask<Boolean, Boolean, Boolean>()
 				{
 					ProgressDialog progressDialog;
-					String message;
+					String message = "";
 
 					@Override
 					protected void onPreExecute()
@@ -532,7 +532,7 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 					@Override
 					protected void onPostExecute(Boolean result)
 					{
-						if (result == false)
+						if (result == false && !message.equals("No Connection"))
 						{
 							Toast.makeText(GroupDeadlineActivity.this, message, Toast.LENGTH_SHORT)
 									.show();
@@ -545,6 +545,9 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 							intent.putExtra(MyUtils.INTENT_GROUP_NAME, groupName);
 							intent.putExtra(MyUtils.INTENT_GMAIL_ADDRESS, gUsernameList
 									.get(position));
+							intent.putExtra(MyUtils.INTENT_ADD_OFFLINE_DEADLINE, message.equals("No Connection"));
+							if (message.equals("No Connection"))
+								Toast.makeText(GroupDeadlineActivity.this, "No Connection, the deadline will be saved and uploaded when a connection is made", Toast.LENGTH_LONG).show();
 							startActivityForResult(intent, MyUtils.ADD_DEADLINES_REQUEST_CODE);
 							dialog.dismiss();
 						}
@@ -689,7 +692,7 @@ public class GroupDeadlineActivity extends Activity implements DeadlineListListe
 			share.putExtra(Intent.EXTRA_STREAM, uri);
 
 			// Show the social share chooser list
-			startActivity(Intent.createChooser(share, "Share Image Tutorial"));
+			startActivity(Intent.createChooser(share, "Share Deadlines Image"));
 
 		} catch (Exception e)
 		{

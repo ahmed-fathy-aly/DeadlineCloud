@@ -14,21 +14,19 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="asuspt.deadlinecloud.permission.C2D_MESSAGE" />
-        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-        
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <permission
         android:name="asuspt.deadlinecloud.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    
     <application
-        android:screenOrientation="portrait"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme" >
-        
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -44,11 +42,20 @@
         </receiver>
         <receiver android:name="asupt.deadlinecloud.data.NewDeadlineBroadcastReceiver" >
             <intent-filter>
-                <action android:name="deadline.cloud.newDeadline" /> 
-               </intent-filter>
+                <action android:name="deadline.cloud.newDeadline" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="asupt.deadlinecloud.data.OfflineDeadlinesBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
         </receiver>
 
         <service android:name="asupt.deadlinecloud.web.GcmIntentService" />
+        <service
+            android:name="asupt.deadlinecloud.web.AddOfflineDeadlinesService"
+            android:enabled="true" >
+        </service>
 
         <activity
             android:name="asupt.deadlinecloud.activities.HomeActivity"

@@ -31,6 +31,7 @@ public class AddDeadlineActivity extends Activity
 	String groupId;
 	String groupName;
 	String gmailAddress;
+	boolean offLineDedaline;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -55,6 +56,12 @@ public class AddDeadlineActivity extends Activity
 			gmailAddress = getIntent().getExtras().getString(MyUtils.INTENT_GMAIL_ADDRESS);
 		else
 			gmailAddress = "";
+
+		if (getIntent().getExtras().containsKey(MyUtils.INTENT_ADD_OFFLINE_DEADLINE))
+			offLineDedaline = getIntent().getExtras().getBoolean(
+					MyUtils.INTENT_ADD_OFFLINE_DEADLINE);
+		else
+			offLineDedaline = false;
 
 		setUpSpiiners();
 	}
@@ -134,18 +141,19 @@ public class AddDeadlineActivity extends Activity
 			// local string
 			deadline.setGroupName(Deadline.localString);
 			deadline.setInMyDeadlines(1);
-			
-			// find the id of the latest deadline and make the id of this one higher
+
+			// find the id of the latest deadline and make the id of this one
+			// higher
 			int id = 0;
-			for (Deadline localDeadline : new DatabaseController(this).getAllDeadlines()) 
-					try
-					{
-						id = Math.max(id, Integer.parseInt(localDeadline.getWebId()));
-					} catch (Exception e)
-					{
-						id = 0;
-					}
-				
+			for (Deadline localDeadline : new DatabaseController(this).getAllDeadlines())
+				try
+				{
+					id = Math.max(id, Integer.parseInt(localDeadline.getWebId()));
+				} catch (Exception e)
+				{
+					id = 0;
+				}
+
 			deadline.setWebId((id) + "");
 
 			// add deadline and leave
@@ -156,7 +164,15 @@ public class AddDeadlineActivity extends Activity
 		{
 			deadline.setGroupName(groupName);
 			deadline.setGroupId(groupId);
-			addDeadline(deadline, groupId, groupName);
+			deadline.setPosterMail(gmailAddress);
+
+			if (offLineDedaline)
+			{
+				new DatabaseController(this).addOfflinesDeadline(deadline);
+				finish();
+			}
+			else
+				addDeadline(deadline, groupId, groupName);
 		}
 
 	}
@@ -186,7 +202,7 @@ public class AddDeadlineActivity extends Activity
 					message = "No Connection";
 					return false;
 				}
-				
+
 				// ask the minion to add it
 				message = "Deadline added to " + destGroupName + "\nby  " + gmailAddress;
 				WebMinion.postDeadline(destGroupId, gmailAddress, deadline);
@@ -200,14 +216,13 @@ public class AddDeadlineActivity extends Activity
 				if (result == false)
 				{
 					Toast.makeText(AddDeadlineActivity.this, message, Toast.LENGTH_SHORT).show();
-				}
-				else
+				} else
 				{
 					Intent returnIntent = new Intent();
 					setResult(RESULT_OK, returnIntent);
 					finish();
 				}
-				
+
 				// dissmiss
 				progressDialog.dismiss();
 

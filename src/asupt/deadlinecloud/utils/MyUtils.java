@@ -28,7 +28,8 @@ public class MyUtils
 	public static final int SORT_BY_PRIORITY = 3;
 	public static final String INTENT_DEADLINE_ID = "deadlineID";
 	public static final String NEW_DEADLINE_KEY = "deadline.cloud.newDeadline";
-
+	public static final String INTENT_ADD_OFFLINE_DEADLINE = "addOfflineDeadline";
+	
 	public static void addGroupToPreferences(String groupName, String id, Context context)
 	{
 

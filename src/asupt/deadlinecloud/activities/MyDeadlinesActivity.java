@@ -205,7 +205,6 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 	}
 
 	/* context menu stuff */
-
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
 	{
@@ -343,7 +342,7 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 			share.putExtra(Intent.EXTRA_STREAM, uri);
 
 			// Show the social share chooser list
-			startActivity(Intent.createChooser(share, "Share Image Tutorial"));
+			startActivity(Intent.createChooser(share, "Share Deadline	Image"));
 
 		} catch (Exception e)
 		{
@@ -458,7 +457,7 @@ public class MyDeadlinesActivity extends Activity implements DeadlineListListene
 			share.putExtra(Intent.EXTRA_STREAM, uri);
 
 			// Show the social share chooser list
-			startActivity(Intent.createChooser(share, "Share Image Tutorial"));
+			startActivity(Intent.createChooser(share, "Share Deadlines	Images"));
 
 		} catch (Exception e)
 		{
